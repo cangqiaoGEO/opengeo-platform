@@ -1,6 +1,7 @@
 import { PROVIDERS_DOCS_URL } from "@workspace/config/constants";
 import { anthropicApi } from "./registry/anthropic-api";
 import { brightdata } from "./registry/brightdata";
+import { dashscope, deepseekApi, tencentTokenhub, volcengine } from "./registry/chinese-api";
 import { cloro } from "./registry/cloro";
 import { dataforseo } from "./registry/dataforseo";
 import { mistralApi } from "./registry/mistral-api";
@@ -36,6 +37,10 @@ const providerMap: Record<string, Provider> = {
 	dataforseo,
 	openrouter,
 	stub,
+	volcengine,
+	dashscope,
+	"deepseek-api": deepseekApi,
+	"tencent-tokenhub": tencentTokenhub,
 };
 
 export function getProvider(id: string): Provider {

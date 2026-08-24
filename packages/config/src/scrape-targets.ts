@@ -99,6 +99,12 @@ export const STATUS_TARGETS = [
 	"gemini:dataforseo:gemini-2.5-flash:online",
 	"chatgpt:openai-api:gpt-5-mini",
 	"chatgpt:openai-api:gpt-5-mini:online",
+	// Chinese answer engines via official APIs (chinese-api.ts); no scraping
+	// vendor reaches these engines today.
+	"doubao:volcengine:doubao-seed-2-0-lite-260215:online",
+	"qwen:dashscope:qwen-plus:online",
+	"deepseek:deepseek-api:deepseek-chat",
+	"yuanbao:tencent-tokenhub:hunyuan-turbos-latest:online",
 	"claude:anthropic-api:claude-sonnet-5",
 	"claude:anthropic-api:claude-sonnet-5:online",
 	"claude:openrouter:anthropic/claude-sonnet-5",

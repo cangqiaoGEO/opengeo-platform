@@ -1,3 +1,8 @@
+> **OpenGEO Platform** — this is a [fork of elmo](https://github.com/elmohq/elmo) (MIT) maintained by the
+> [OpenGEO](https://github.com/cangqiaoGEO) community as its product layer, adding Chinese answer engines
+> (Doubao, Qwen, DeepSeek, Tencent Yuanbao) as first-class citizens alongside the international ones.
+> Fork rationale, divergence plan, and Chinese-engine setup: [OPENGEO.md](OPENGEO.md).
+
 <p align="center">
   <a href="https://github.com/elmohq/elmo">
     <img src="apps/www/public/brand/logos/elmo-logo-xl.png" alt="Elmo" width="300">

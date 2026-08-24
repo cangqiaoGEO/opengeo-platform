@@ -24,7 +24,7 @@
 ```bash
 pnpm install
 brew services start postgresql@18 && /opt/homebrew/opt/postgresql@18/bin/createdb opengeo_platform
-cp .env.opengeo.example .env && cp .env .env.web && mv .env.web apps/web/.env   # 填入两个随机密钥
+cp .env.example .env && cp .env .env.web && mv .env.web apps/web/.env   # 填入两个随机密钥
 (cd packages/lib && pnpm exec drizzle-kit migrate)
 pnpm --filter @workspace/web dev      # http://localhost:3000
 pnpm --filter @workspace/worker dev   # 后台任务

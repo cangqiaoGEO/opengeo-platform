@@ -5,6 +5,7 @@
  * Data is fetched client-side via TanStack Query hooks in PromptsDisplay,
  * so no route loader is needed (allows immediate rendering with skeletons).
  */
+import { useTranslation } from "react-i18next";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PromptsDisplay } from "@/components/prompts-display";
 import { getAppName, getBrandName, buildTitle } from "@/lib/route-head";
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/_authed/app/$brand/visibility")({
 });
 
 function VisibilityPage() {
+	const { t } = useTranslation();
 	const { brand: brandId } = Route.useParams();
 
 	const infoContent = (
@@ -46,8 +48,8 @@ function VisibilityPage() {
 
 	return (
 		<PromptsDisplay
-			pageTitle="Visibility"
-			pageDescription="See how LLMs are evaluating prompts related to your brand."
+			pageTitle={t("pages.visibility.title")}
+			pageDescription={t("pages.visibility.description")}
 			pageInfoContent={infoContent}
 			editLink={`/app/${brandId}/settings/prompts`}
 		/>

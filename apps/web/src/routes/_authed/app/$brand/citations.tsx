@@ -3,6 +3,7 @@
  *
  * Shows citation statistics with filtering by model, tags, and lookback period.
  */
+import { useTranslation } from "react-i18next";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { getAppName, getBrandName, buildTitle } from "@/lib/route-head";
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/_authed/app/$brand/citations")({
 });
 
 function CitationsPage() {
+	const { t } = useTranslation();
 	const { brand: brandId } = Route.useParams();
 	const queryClient = useQueryClient();
 
@@ -74,8 +76,8 @@ function CitationsPage() {
 
 	return (
 		<PageHeader
-			title="Citations"
-			subtitle="See which sources LLMs cite when responding to your prompts."
+			title={t("pages.citations.title")}
+			subtitle={t("pages.citations.description")}
 			infoContent={infoContent}
 		>
 			<FilteredListShell
@@ -109,7 +111,7 @@ function CitationsPage() {
 					</Card>
 				}
 				totalCount={citationData?.totalCitations}
-				noMatchesTitle="No citations found for the selected filters."
+				noMatchesTitle={t("pages.citations.noMatches")}
 				noMatchesDescription="Try adjusting your filters or time period."
 				emptyState={
 					<Card>

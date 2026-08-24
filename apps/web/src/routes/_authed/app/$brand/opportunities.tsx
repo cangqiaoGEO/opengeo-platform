@@ -9,6 +9,7 @@
  * server-side and regenerated only when stale — see server/opportunities.ts.
  */
 
+import { useTranslation } from "react-i18next";
 import { IconClock } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Skeleton } from "@workspace/ui/components/skeleton";
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/_authed/app/$brand/opportunities")({
 });
 
 function OpportunitiesPage() {
+	const { t } = useTranslation();
 	const { brand: brandId } = Route.useParams();
 	const { data, isLoading, isError } = useOpportunities(brandId);
 
@@ -56,8 +58,8 @@ function OpportunitiesPage() {
 
 	return (
 		<PageHeader
-			title="Opportunities"
-			subtitle="What to create, pitch, and seed to earn more AI citations — generated from your tracked answer data."
+			title={t("pages.opportunities.title")}
+			subtitle={t("pages.opportunities.description")}
 			infoContent={infoContent}
 		>
 			<div className="space-y-6">

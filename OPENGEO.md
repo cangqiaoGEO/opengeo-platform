@@ -39,6 +39,7 @@ pnpm --filter @workspace/worker dev   # 后台任务
 ## 路线图
 
 - [x] v0.1 去品牌化清扫（2026-08-25）：产品 UI 全量换为 OpenGEO——wordmark/图标集（观测环，teal #0E6B5B）/标题/manifest/OG 分享图/导出水印/关于链接；Titan One 字体与 @fontsource/titan-one 依赖移除。保留：`ELMO_ENCRYPTION_KEY` 环境变量名（兼容）、demo 模式凭证、`apps/www`（上游营销站，不部署不改，后续或移除）
+- [x] i18n P1+P2（2026-08-25）：react-i18next 双语框架 + 侧边栏语言切换器（偏好存 localStorage，`<html lang>` 动态）；导航全量、六个仪表盘页标题/说明、筛选器、图表导出按钮、注册页、品牌切换页中文化，术语对齐 OpenGEO 六层仓库口径（可见度/竞对份额/检索扩散/引用来源/机会点）。长尾字符串（图表徽标、tooltip、错误提示、报告导出）为 P3
 - [ ] v0.2 剥离 cloud 计费与 Auth0 同步（保留 local / whitelabel 两种部署模式）
 - [ ] v0.3 观测导出对齐 [RFC-0005 ObservationRecord](https://github.com/cangqiaoGEO/opengeo-spec/blob/main/rfcs/0005-observation-record.md)，与 opengeo-index 互通
 - [ ] v0.4 中文引擎 scraped 通道（消费者界面采集，经用户本人授权登录）

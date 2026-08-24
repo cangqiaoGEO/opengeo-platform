@@ -1,5 +1,5 @@
 import type { ModelConfig } from "@workspace/config/scrape-targets";
-import type { Citation } from "../text-extraction";
+import type { Citation } from "../../text-extraction";
 import type { Provider, ProviderOptions, ScrapeResult } from "../types";
 
 /**

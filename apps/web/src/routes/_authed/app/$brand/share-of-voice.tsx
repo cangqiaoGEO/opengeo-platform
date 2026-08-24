@@ -5,6 +5,7 @@
  * mention rates next to the brand's own, with the brand's overall share, a
  * donut of top competitors, and share of voice over time.
  */
+import { useTranslation } from "react-i18next";
 import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
@@ -55,6 +56,7 @@ const TIPS = {
 };
 
 function ShareOfVoicePage() {
+	const { t } = useTranslation();
 	const { brand: brandId } = Route.useParams();
 	const { model, lookback, tags } = useListFilters();
 
@@ -112,7 +114,7 @@ function ShareOfVoicePage() {
 				<div className="grid gap-6 lg:grid-cols-2">
 					<Card>
 						<CardHeader>
-							<CardTitle>Share of Voice</CardTitle>
+							<CardTitle>{t("pages.shareOfVoice.title")}</CardTitle>
 						</CardHeader>
 						<CardContent className="flex items-center justify-between gap-4">
 							<div>
@@ -130,7 +132,7 @@ function ShareOfVoicePage() {
 
 					<Card>
 						<CardHeader>
-							<CardTitle>Share of Voice Trends</CardTitle>
+							<CardTitle>{t("pages.shareOfVoice.trends")}</CardTitle>
 						</CardHeader>
 						<CardContent>
 							<TrendChart
@@ -145,7 +147,7 @@ function ShareOfVoicePage() {
 
 				<Card>
 					<CardHeader>
-						<CardTitle>Share of Voice Leaderboard</CardTitle>
+						<CardTitle>{t("pages.shareOfVoice.leaderboard")}</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<Table>

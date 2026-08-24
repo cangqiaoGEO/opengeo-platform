@@ -6,6 +6,7 @@
  * sign-in and also offers Google OAuth.
  */
 
+import { useTranslation } from "react-i18next";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import { createFileRoute, Link, useNavigate, useRouteContext } from "@tanstack/react-router";
 import type { ClientConfig } from "@workspace/config/types";
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/auth/register")({
 });
 
 function RegisterPage() {
+	const { t } = useTranslation();
 	const { returnTo } = Route.useSearch();
 	const context = useRouteContext({ strict: false }) as { clientConfig?: ClientConfig };
 	const canRegister = context.clientConfig?.canRegister ?? false;
@@ -104,7 +106,7 @@ function RegisterPage() {
 	}
 
 	return (
-		<FullPageCard title="Create account" subtitle="Sign up to get started">
+		<FullPageCard title={t("auth.createAccount")} subtitle={t("auth.signUpSubtitle")}>
 			{isCloud && (
 				<div className="space-y-4 w-full pb-4">
 					<Button
@@ -130,11 +132,11 @@ function RegisterPage() {
 					</Alert>
 				)}
 				<div className="space-y-2">
-					<Label htmlFor="name">Name</Label>
+					<Label htmlFor="name">{t("auth.name")}</Label>
 					<Input
 						id="name"
 						type="text"
-						placeholder="Your name"
+						placeholder={t("auth.namePlaceholder")}
 						value={name}
 						onChange={(e) => setName(e.target.value)}
 						required
@@ -143,7 +145,7 @@ function RegisterPage() {
 					/>
 				</div>
 				<div className="space-y-2">
-					<Label htmlFor="email">Email</Label>
+					<Label htmlFor="email">{t("auth.email")}</Label>
 					<Input
 						id="email"
 						type="email"
@@ -155,11 +157,11 @@ function RegisterPage() {
 					/>
 				</div>
 				<div className="space-y-2">
-					<Label htmlFor="password">Password</Label>
+					<Label htmlFor="password">{t("auth.password")}</Label>
 					<Input
 						id="password"
 						type="password"
-						placeholder="Create a password"
+						placeholder={t("auth.passwordPlaceholder")}
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						required
@@ -168,7 +170,7 @@ function RegisterPage() {
 					/>
 				</div>
 				<Button type="submit" className="w-full" disabled={loading}>
-					{loading ? "Creating account..." : "Create account"}
+					{loading ? t("auth.creatingAccount") : t("auth.createAccount")}
 				</Button>
 			</form>
 			{hasUsers && (

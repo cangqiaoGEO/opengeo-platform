@@ -33,6 +33,8 @@ import {
 import { NavMain, type NavGroup } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import { NavAppInfo } from "@/components/nav-app-info";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useTranslation } from "react-i18next";
 import { DemoModePill } from "@/components/demo-mode-pill";
 import { Logo } from "@/components/logo";
 import type { BrandWithPrompts } from "@workspace/lib/db/schema";
@@ -62,6 +64,7 @@ export function AppSidebar({
 	...props
 }: AppSidebarProps) {
 	const { setOpenMobile } = useSidebar();
+	const { t } = useTranslation();
 	const context = useRouteContext({ strict: false }) as { clientConfig?: ClientConfig };
 	// Reports are disabled entirely in cloud; hide the nav entry there.
 	const reportsEnabled = context.clientConfig?.features.reportGeneration ?? true;
@@ -76,7 +79,7 @@ export function AppSidebar({
 	if (scope === "brand") {
 		const dashboardItems = [
 			{
-				title: "Overview",
+				title: t("nav.overview"),
 				url: "/",
 				icon: IconDashboard,
 			},
@@ -86,27 +89,27 @@ export function AppSidebar({
 		if (brand?.onboarded) {
 			dashboardItems.push(
 				{
-					title: "Visibility",
+					title: t("nav.visibility"),
 					url: "/visibility",
 					icon: IconChartBar,
 				},
 				{
-					title: "Share of Voice",
+					title: t("nav.shareOfVoice"),
 					url: "/share-of-voice",
 					icon: IconSpeakerphone,
 				},
 				{
-					title: "Query Fan-Out",
+					title: t("nav.queryFanOut"),
 					url: "/query-fan-out",
 					icon: IconSitemap,
 				},
 				{
-					title: "Citations",
+					title: t("nav.citations"),
 					url: "/citations",
 					icon: IconLink,
 				},
 				{
-					title: "Opportunities",
+					title: t("nav.opportunities"),
 					url: "/opportunities",
 					icon: IconTarget,
 				},
@@ -114,40 +117,40 @@ export function AppSidebar({
 		}
 
 		groups.push({
-			label: "Dashboard",
+			label: t("nav.dashboard"),
 			items: dashboardItems,
 		});
 
 		// Settings section - only show if onboarded
 		if (brand?.onboarded) {
 			groups.push({
-				label: "Settings",
+				label: t("nav.settings"),
 				items: [
 					{
-						title: "Brand",
+						title: t("nav.brand"),
 						url: "/settings/brand",
 						icon: IconBuilding,
 					},
 					{
-						title: "Competitors",
+						title: t("nav.competitors"),
 						url: "/settings/competitors",
 						icon: IconBuildings,
 					},
 					{
-						title: "Prompts",
+						title: t("nav.prompts"),
 						url: "/settings/prompts",
 						icon: IconListDetails,
 					},
 					{
-						title: "LLMs",
+						title: t("nav.llms"),
 						url: "/settings/llms",
 						icon: IconCpu,
 					},
 					...(context.clientConfig?.features.teamInvites
-						? [{ title: "Team", url: "/settings/members", icon: IconUsers }]
+						? [{ title: t("nav.team"), url: "/settings/members", icon: IconUsers }]
 						: []),
 					...(context.clientConfig?.features.billing
-						? [{ title: "Billing", url: "/settings/billing", icon: IconCreditCard }]
+						? [{ title: t("nav.billing"), url: "/settings/billing", icon: IconCreditCard }]
 						: []),
 				],
 			});
@@ -157,7 +160,7 @@ export function AppSidebar({
 	// Admin section
 	if (showAdminSection) {
 		const reportsItem = {
-			title: "Reports",
+			title: t("nav.reports"),
 			url: "/reports",
 			icon: IconReport,
 			absolute: true,
@@ -165,20 +168,20 @@ export function AppSidebar({
 		const adminItems = isAdmin
 			? [
 					{
-						title: "Brands",
+						title: t("nav.brands"),
 						url: "/admin",
 						icon: IconTable,
 						absolute: true,
 					},
 					...(reportsEnabled ? [reportsItem] : []),
 					{
-						title: "Workflows",
+						title: t("nav.workflows"),
 						url: "/admin/workflows",
 						icon: IconTimeline,
 						absolute: true,
 					},
 					{
-						title: "Tools",
+						title: t("nav.tools"),
 						url: "/admin/tools",
 						icon: IconTool,
 						absolute: true,
@@ -187,7 +190,7 @@ export function AppSidebar({
 			: [reportsItem];
 
 		groups.push({
-			label: "Admin",
+			label: t("nav.admin"),
 			items: adminItems,
 		});
 	}
@@ -222,6 +225,7 @@ export function AppSidebar({
 				<NavMain groups={groups} />
 			</SidebarContent>
 			<SidebarFooter>
+				<div className="mx-2 flex justify-end"><LanguageSwitcher /></div>
 				<NavUser canSwitchBrand={scope !== "account"} />
 				<NavAppInfo />
 			</SidebarFooter>

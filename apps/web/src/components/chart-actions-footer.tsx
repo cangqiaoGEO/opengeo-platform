@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
 import { Download } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
@@ -37,6 +38,7 @@ export function ChartActionsFooter({
 	availableModels = [],
 	lookback = "1m",
 }: ChartActionsFooterProps) {
+	const { t } = useTranslation();
 	const isSinglePrompt = Boolean(promptId && brandId);
 
 	const context = useRouteContext({ strict: false }) as { clientConfig?: ClientConfig };
@@ -80,7 +82,7 @@ export function ChartActionsFooter({
 							title="Download chart as PNG"
 						>
 							<Download className="size-3 mr-0.5" />
-							<span className="text-xs font-normal">{isDownloading ? "Exporting..." : "Export (PNG)"}</span>
+							<span className="text-xs font-normal">{isDownloading ? t("actions.exporting") : t("actions.exportPng")}</span>
 						</Button>
 					)}
 				</div>

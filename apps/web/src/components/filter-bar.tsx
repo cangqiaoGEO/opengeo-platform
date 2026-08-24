@@ -1,3 +1,5 @@
+import i18n from "@/lib/i18n";
+import { useTranslation } from "react-i18next";
 import { useSearch } from "@tanstack/react-router";
 import { ModelIcon } from "@workspace/ui/brand/model-icon";
 import { Button } from "@workspace/ui/components/button";
@@ -54,17 +56,18 @@ export function labelForModel(model: string): string {
 	return labelForModelFilter(model);
 }
 
-const LOOKBACK_OPTIONS: { value: LookbackPeriod; label: string }[] = [
-	{ value: "1w", label: "Last 7 days" },
-	{ value: "1m", label: "Last 30 days" },
-	{ value: "3m", label: "Last 3 months" },
-	{ value: "6m", label: "Last 6 months" },
-	{ value: "1y", label: "Last 12 months" },
-	{ value: "all", label: "All time" },
+// 渲染时经 i18n 翻译（filters.lookback.<value>），此处仅保留 value 清单
+const LOOKBACK_OPTIONS: { value: LookbackPeriod }[] = [
+	{ value: "1w" },
+	{ value: "1m" },
+	{ value: "3m" },
+	{ value: "6m" },
+	{ value: "1y" },
+	{ value: "all" },
 ];
 
 function getLookbackLabel(lookback: LookbackPeriod): string {
-	return LOOKBACK_OPTIONS.find((o) => o.value === lookback)?.label ?? lookback;
+	return i18n.t(`filters.lookback.${lookback}`);
 }
 
 // ------------------------------------------------------------------
@@ -173,6 +176,7 @@ export function ModelDropdown({ trackedTargets }: { trackedTargets: TrackedTarge
 // ------------------------------------------------------------------
 
 export function LookbackDropdown() {
+	useTranslation(); // 订阅语言切换以重渲染
 	const { brand } = useBrand();
 	const defaultLookback = useMemo(() => getDefaultLookbackPeriod(brand?.earliestDataDate), [brand?.earliestDataDate]);
 	const urlLookback = useSearch({ strict: false, select: (s) => s.lookback });
@@ -192,7 +196,7 @@ export function LookbackDropdown() {
 				<DropdownMenuRadioGroup value={selected} onValueChange={(v) => handleChange(v as LookbackPeriod)}>
 					{LOOKBACK_OPTIONS.map((opt) => (
 						<DropdownMenuRadioItem key={opt.value} value={opt.value} className="cursor-pointer">
-							{opt.label}
+							{i18n.t(`filters.lookback.${opt.value}`)}
 						</DropdownMenuRadioItem>
 					))}
 				</DropdownMenuRadioGroup>
@@ -208,6 +212,7 @@ export function LookbackDropdown() {
 // ------------------------------------------------------------------
 
 export function TagsDropdown({ availableTags }: { availableTags: readonly string[] }) {
+	useTranslation(); // 订阅语言切换以重渲染
 	const urlTags = useSearch({ strict: false, select: (s) => s.tags });
 	const setFilters = useFilterNavigate();
 	const selected = useMemo(() => splitTags(urlTags), [urlTags]);
@@ -227,7 +232,7 @@ export function TagsDropdown({ availableTags }: { availableTags: readonly string
 				render={
 					<FilterTriggerButton
 						icon={<TagIcon className="size-3.5" />}
-						label="Tags"
+						label={i18n.t("filters.tags")}
 						active={selected.length > 0}
 						badgeCount={selected.length > 0 ? selected.length : undefined}
 					/>
@@ -235,7 +240,7 @@ export function TagsDropdown({ availableTags }: { availableTags: readonly string
 			/>
 			<PopoverContent align="start" className="w-64 p-0" initialFocus={false}>
 				<div className="flex items-center justify-between px-3 h-10 border-b">
-					<span className="font-medium text-sm">Tags</span>
+					<span className="font-medium text-sm">{i18n.t("filters.tags")}</span>
 					{selected.length > 0 && (
 						<button
 							type="button"
@@ -290,7 +295,9 @@ export function TagsDropdown({ availableTags }: { availableTags: readonly string
 // setState) to avoid flashing back when the URL echo races with typing.
 // ------------------------------------------------------------------
 
-export function SearchInput({ placeholder = "Search prompts..." }: { placeholder?: string }) {
+export function SearchInput({ placeholder }: { placeholder?: string }) {
+	useTranslation(); // 订阅语言切换以重渲染
+	const resolvedPlaceholder = placeholder ?? i18n.t("filters.searchPrompts");
 	const urlValue = useSearch({ strict: false, select: (s) => s.q });
 	const setFilters = useFilterNavigate();
 	const value = urlValue ?? "";
@@ -340,7 +347,7 @@ export function SearchInput({ placeholder = "Search prompts..." }: { placeholder
 			<InputGroupInput
 				value={local}
 				onChange={(e) => setLocal(e.target.value)}
-				placeholder={placeholder}
+				placeholder={resolvedPlaceholder}
 				className="h-8 text-sm"
 			/>
 			<InputGroupAddon className="pl-2.5">

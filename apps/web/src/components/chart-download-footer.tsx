@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Download } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { ChartFooter } from "./chart-footer";
@@ -8,6 +9,7 @@ interface ChartDownloadFooterProps {
 }
 
 export function ChartDownloadFooter({ onDownload, isDownloading }: ChartDownloadFooterProps) {
+	const { t } = useTranslation();
 	return (
 		<div className="print:hidden">
 			<ChartFooter>
@@ -20,7 +22,7 @@ export function ChartDownloadFooter({ onDownload, isDownloading }: ChartDownload
 					title="Download chart as PNG"
 				>
 					<Download className="size-3 mr-0.5" />
-					<span className="text-xs font-normal">{isDownloading ? "Exporting..." : "Export (PNG)"}</span>
+					<span className="text-xs font-normal">{isDownloading ? t("actions.exporting") : t("actions.exportPng")}</span>
 				</Button>
 			</ChartFooter>
 		</div>

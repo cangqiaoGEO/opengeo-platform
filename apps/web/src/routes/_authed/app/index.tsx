@@ -7,6 +7,7 @@
  * list.
  */
 
+import { useTranslation } from "react-i18next";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { buttonVariants } from "@workspace/ui/components/button";
@@ -88,10 +89,11 @@ export const Route = createFileRoute("/_authed/app/")({
 });
 
 function BrandSwitcherPage() {
+	const { t } = useTranslation();
 	const { brands: brandList, unprovisionedOrgs, canCreateBrands } = Route.useLoaderData();
 
 	return (
-		<FullPageCard title="Brand Switcher" subtitle="Select a brand to get started">
+		<FullPageCard title={t("pages.brandSwitcher.title")} subtitle={t("pages.brandSwitcher.description")}>
 			<div className="flex flex-col space-y-3 min-w-[200px]">
 				{brandList.length > 0 || unprovisionedOrgs.length > 0 ? (
 					<>
@@ -121,7 +123,7 @@ function BrandSwitcherPage() {
 				)}
 				{canCreateBrands && (
 					<Link to="/app/new" className={buttonVariants({ variant: "outline" })}>
-						+ Create new brand
+						{t("pages.brandSwitcher.create")}
 					</Link>
 				)}
 			</div>

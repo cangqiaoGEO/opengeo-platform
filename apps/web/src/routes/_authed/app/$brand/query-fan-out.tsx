@@ -11,6 +11,7 @@
  * searches contribute runs but no queries. See `server/query-fanout.ts` and
  * `lib/fanout-analysis.ts`.
  */
+import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { cn } from "@workspace/ui/lib/utils";
@@ -58,6 +59,7 @@ export const Route = createFileRoute("/_authed/app/$brand/query-fan-out")({
 });
 
 function QueryFanoutPage() {
+	const { t } = useTranslation();
 	const { brand: brandId } = Route.useParams();
 	const { model, lookback, tags } = useListFilters();
 	const tab = Route.useSearch({ select: (s) => s.tab ?? "fanout" });
@@ -140,8 +142,8 @@ function QueryFanoutPage() {
 
 	return (
 		<PageHeader
-			title="Query Fan-Out"
-			subtitle="The web searches AI engines run when answering your prompts."
+			title={t("pages.queryFanOut.title")}
+			subtitle={t("pages.queryFanOut.description")}
 			infoContent={infoContent}
 		>
 			<FilterSection>

@@ -38,7 +38,7 @@ pnpm --filter @workspace/worker dev   # 后台任务
 
 ## 路线图
 
-- [ ] v0.1 去品牌化清扫：elmo 名称/logo/营销站（apps/www）全量替换或移除
+- [x] v0.1 去品牌化清扫（2026-08-25）：产品 UI 全量换为 OpenGEO——wordmark/图标集（观测环，teal #0E6B5B）/标题/manifest/OG 分享图/导出水印/关于链接；Titan One 字体与 @fontsource/titan-one 依赖移除。保留：`ELMO_ENCRYPTION_KEY` 环境变量名（兼容）、demo 模式凭证、`apps/www`（上游营销站，不部署不改，后续或移除）
 - [ ] v0.2 剥离 cloud 计费与 Auth0 同步（保留 local / whitelabel 两种部署模式）
 - [ ] v0.3 观测导出对齐 [RFC-0005 ObservationRecord](https://github.com/cangqiaoGEO/opengeo-spec/blob/main/rfcs/0005-observation-record.md)，与 opengeo-index 互通
 - [ ] v0.4 中文引擎 scraped 通道（消费者界面采集，经用户本人授权登录）

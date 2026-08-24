@@ -24,7 +24,7 @@ const defaultClientConfig: ClientConfig = {
 		canCreateBrands: true,
 	},
 	branding: {
-		name: "Elmo",
+		name: "OpenGEO",
 		parentName: "",
 		optimizationUrlTemplate: "",
 		chartColors: DEFAULT_CHART_COLORS,

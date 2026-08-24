@@ -188,7 +188,7 @@ function PlanPicker({ paywall }: { paywall: PaywallRequired }) {
 
 			<p className="text-center text-sm text-muted-foreground">
 				Need more brands, any other models, higher numbers of samples, SSO, white label, or custom limits?{" "}
-				<a className="underline" href="mailto:hello@elmohq.com?subject=Elmo%20Cloud%20custom%20plan">
+				<a className="underline" href="https://github.com/cangqiaoGEO/opengeo-platform/issues">
 					Talk to us about a custom plan
 				</a>
 				.

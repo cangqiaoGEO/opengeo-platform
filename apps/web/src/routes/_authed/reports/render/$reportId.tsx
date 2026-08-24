@@ -742,7 +742,7 @@ function ReportRenderPage() {
 				<div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-10 text-center">
 					<h2 className="text-2xl font-bold text-slate-800 mb-2">Ready to Optimize Your AI Visibility?</h2>
 					<p className="text-slate-600 text-base mb-8">
-						Take your brand's AI presence to the next level with {branding?.name || "Elmo"}
+						Take your brand's AI presence to the next level with {branding?.name || "OpenGEO"}
 					</p>
 
 					<div className="grid grid-cols-3 gap-6 mb-8">
@@ -776,9 +776,9 @@ function ReportRenderPage() {
 					</div>
 
 					<div className="pt-6 border-t border-blue-200">
-						<p className="text-slate-800 font-medium mb-2">Get started with {branding?.name || "Elmo"} today</p>
+						<p className="text-slate-800 font-medium mb-2">Get started with {branding?.name || "OpenGEO"} today</p>
 						<p className="text-slate-600 text-sm text-balance">
-							Visit <strong>{branding?.url || "elmo.chat"}</strong> to learn more about our AI visibility platform and
+							Visit <strong>{branding?.url || "github.com/cangqiaoGEO"}</strong> to learn more about our AI visibility platform and
 							services.
 						</p>
 					</div>
@@ -880,7 +880,7 @@ function PageFooter({ branding }: { branding?: ClientConfig["branding"] }) {
 	return (
 		<div className="pt-4 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
 			<Logo iconClassName="!size-3" textClassName="text-[10px] font-medium text-slate-400" />
-			<span>{branding?.url || "elmo.chat"}</span>
+			<span>{branding?.url || "github.com/cangqiaoGEO"}</span>
 		</div>
 	);
 }

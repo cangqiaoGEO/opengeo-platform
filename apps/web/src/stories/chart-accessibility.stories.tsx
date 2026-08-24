@@ -85,7 +85,7 @@ function makeData(days: number): ChartDataPoint[] {
 const clientConfig: ClientConfig = {
 	mode: "local",
 	features: { readOnly: false, showOptimizeButton: false, canCreateBrands: true },
-	branding: { name: "Elmo", chartColors: DEFAULT_CHART_COLORS },
+	branding: { name: "OpenGEO", chartColors: DEFAULT_CHART_COLORS },
 	analytics: {},
 };
 

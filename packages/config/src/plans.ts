@@ -1,5 +1,5 @@
 /**
- * The Elmo Cloud plan catalog.
+ * The OpenGEO Cloud plan catalog.
  *
  * This file is the single source of truth for what each cloud plan includes.
  * Billing (Stripe products/prices), write-time enforcement, the worker's run
@@ -18,7 +18,7 @@ export type PlanKey = "starter" | "basic" | "pro" | "business";
 
 export type BillingInterval = "monthly" | "annual";
 
-/** Whether Elmo Cloud reaches a platform by scraping its product or calling an API. */
+/** Whether OpenGEO Cloud reaches a platform by scraping its product or calling an API. */
 export type ProviderAccessKind = "scraped" | "api";
 
 export interface CloudPlatform {
@@ -39,13 +39,13 @@ export interface CloudPlatform {
 }
 
 /**
- * Everything Elmo Cloud sells, and how. An entry with `access` is pickable as a
+ * Everything OpenGEO Cloud sells, and how. An entry with `access` is pickable as a
  * standard platform, which decides its sampling rate and which tier the pricing
  * tables group it under; an entry with `premium` is sold grounded from the pool.
  * Most are both. A platform cannot be listed without being one or the other.
  *
  * A self-hosted operator can wire the same model differently — this describes
- * the cloud offering the plans are priced against, not what Elmo can track.
+ * the cloud offering the plans are priced against, not what OpenGEO can track.
  *
  * A menu entry is only offerable when the operator's SCRAPE_TARGETS actually
  * configures a matching target; the UI and run policy intersect with the

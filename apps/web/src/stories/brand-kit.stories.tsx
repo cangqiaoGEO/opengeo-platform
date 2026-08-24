@@ -1,8 +1,8 @@
 /**
- * Brand Kit story — previews all Elmo brand assets in one place.
+ * Brand Kit story — previews all OpenGEO brand assets in one place.
  *
  * Sections:
- *  1. Logo — text logo ("elmo" in Titan One) and whitelabel variant
+ *  1. Logo — text logo ("OpenGEO" wordmark) and whitelabel variant
  *  2. Icon — the "e" icon at various sizes (16, 32, 64, 128, 256)
  *  3. Maskable Icon — for adaptive/PWA contexts
  *  4. Color Palette — brand color, theme colors, and chart palette
@@ -15,7 +15,7 @@ import { setMockRouteContext } from "./_mocks/tanstack-router";
 
 const BRAND_COLOR = "#2563eb";
 
-const elmoConfig: ClientConfig = {
+const defaultConfig: ClientConfig = {
 	mode: "local",
 	features: {
 		readOnly: false,
@@ -23,7 +23,7 @@ const elmoConfig: ClientConfig = {
 		canCreateBrands: true,
 	},
 	branding: {
-		name: "Elmo",
+		name: "OpenGEO",
 		chartColors: DEFAULT_CHART_COLORS.map((c) => c),
 	},
 	analytics: {},
@@ -77,16 +77,16 @@ function ColorSwatch({ color, label }: { color: string; label: string }) {
 // Stories
 // ---------------------------------------------------------------------------
 
-/** Full Elmo brand kit — logo, icons, colors, typography */
-export const ElmoBrandKit = () => {
-	setMockClientConfig(elmoConfig);
-	setMockRouteContext({ clientConfig: elmoConfig });
+/** Full OpenGEO brand kit — logo, icons, colors, typography */
+export const BrandKit = () => {
+	setMockClientConfig(defaultConfig);
+	setMockRouteContext({ clientConfig: defaultConfig });
 
 	const iconSizes = [16, 32, 64, 128, 256];
 
 	return (
 		<div className="p-8 max-w-4xl mx-auto space-y-2">
-			<h1 className="text-2xl font-bold text-foreground mb-8">Elmo Brand Kit</h1>
+			<h1 className="text-2xl font-bold text-foreground mb-8">OpenGEO Brand Kit</h1>
 
 			{/* Logo */}
 			<Section title="Logo">
@@ -119,7 +119,7 @@ export const ElmoBrandKit = () => {
 										style={{ minWidth: Math.max(size + 16, 48), minHeight: Math.max(size + 16, 48) }}
 									>
 										<img
-											src="/icons/elmo-icon.svg"
+											src="/icons/opengeo-icon.svg"
 											alt={`Elmo icon ${size}px`}
 											width={size}
 											height={size}
@@ -143,7 +143,7 @@ export const ElmoBrandKit = () => {
 										style={{ minWidth: Math.max(size + 16, 48), minHeight: Math.max(size + 16, 48) }}
 									>
 										<img
-											src="/icons/elmo-icon.svg"
+											src="/icons/opengeo-icon.svg"
 											alt={`Elmo icon ${size}px on dark`}
 											width={size}
 											height={size}
@@ -167,7 +167,7 @@ export const ElmoBrandKit = () => {
 						<div key={size} className="flex flex-col items-center gap-2">
 							<div className="border rounded-lg overflow-hidden flex items-center justify-center">
 								<img
-									src="/icons/elmo-icon-maskable.svg"
+									src="/icons/opengeo-icon-maskable.svg"
 									alt={`Elmo maskable icon ${size}px`}
 									width={size}
 									height={size}
@@ -185,7 +185,7 @@ export const ElmoBrandKit = () => {
 							style={{ width: 128, height: 128 }}
 						>
 							<img
-								src="/icons/elmo-icon-maskable.svg"
+								src="/icons/opengeo-icon-maskable.svg"
 								alt="Elmo maskable icon circular crop"
 								width={128}
 								height={128}

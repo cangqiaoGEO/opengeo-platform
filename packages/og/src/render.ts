@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { DEFAULT_APP_NAME, ELMO_BRAND_COLOR } from "@workspace/config/constants";
+import { DEFAULT_APP_NAME, OPENGEO_BRAND_COLOR } from "@workspace/config/constants";
 
 export const ACCENT_COLORS = ["#2563eb", "#f4d35e", "#ee964b", "#f95738"];
 export const DEFAULT_TAGLINE = "AI Search Optimization";
@@ -14,11 +14,11 @@ export interface OgImageOptions {
 }
 
 export function renderOgImage({ appName, title, description, accentColors, iconDataUri }: OgImageOptions) {
-	const isElmo = appName === DEFAULT_APP_NAME;
-	const brandColor = isElmo ? ELMO_BRAND_COLOR : (accentColors?.[0] ?? "#1e293b");
+	const isDefaultBrand = appName === DEFAULT_APP_NAME;
+	const brandColor = isDefaultBrand ? OPENGEO_BRAND_COLOR : (accentColors?.[0] ?? "#1e293b");
 	const desc = description || DEFAULT_DESCRIPTION;
-	const watermarkColor = isElmo ? "rgba(37,99,235,0.04)" : "rgba(0,0,0,0.03)";
-	const gradientColors = isElmo
+	const watermarkColor = isDefaultBrand ? "rgba(14,107,91,0.05)" : "rgba(0,0,0,0.03)";
+	const gradientColors = isDefaultBrand
 		? ACCENT_COLORS
 		: accentColors && accentColors.length >= 2
 			? accentColors.slice(0, 4)
@@ -36,13 +36,14 @@ export function renderOgImage({ appName, title, description, accentColors, iconD
 				backgroundColor: "#ffffff",
 			},
 		},
-		isElmo
+		isDefaultBrand
 			? createElement(
 					"div",
 					{
 						style: {
 							position: "absolute",
-							fontFamily: "Titan One",
+							fontFamily: "Geist Sans",
+							fontWeight: 500,
 							fontSize: 700,
 							color: watermarkColor,
 							lineHeight: 1,
@@ -50,7 +51,7 @@ export function renderOgImage({ appName, title, description, accentColors, iconD
 							top: -60,
 						},
 					},
-					"e",
+					"G",
 				)
 			: null,
 		createElement(
@@ -65,19 +66,20 @@ export function renderOgImage({ appName, title, description, accentColors, iconD
 					paddingRight: 80,
 				},
 			},
-			isElmo
+			isDefaultBrand
 				? createElement(
 						"div",
 						{
 							style: {
-								fontFamily: "Titan One",
-								fontSize: 140,
-								color: ELMO_BRAND_COLOR,
+								fontFamily: "Geist Sans",
+								fontWeight: 500,
+								fontSize: 120,
+								color: OPENGEO_BRAND_COLOR,
 								lineHeight: 1,
 								marginBottom: 40,
 							},
 						},
-						"elmo",
+						"OpenGEO",
 					)
 				: iconDataUri
 					? createElement("img", {
@@ -99,7 +101,7 @@ export function renderOgImage({ appName, title, description, accentColors, iconD
 						marginBottom: 28,
 					},
 				},
-				isElmo ? title || DEFAULT_TAGLINE : appName,
+				isDefaultBrand ? title || DEFAULT_TAGLINE : appName,
 			),
 			createElement(
 				"div",

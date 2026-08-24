@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import { extname } from "node:path";
 import { createFileRoute } from "@tanstack/react-router";
-import titanOne400Data from "virtual:font/titan-one-400";
 import geistSans400Data from "virtual:font/geist-sans-400";
 import geistSans500Data from "virtual:font/geist-sans-500";
 import { DEFAULT_APP_NAME } from "@workspace/config/constants";
@@ -89,12 +88,6 @@ export const Route = createFileRoute("/api/og/")({
 						width: 1200,
 						height: 630,
 						fonts: [
-							{
-								name: "Titan One",
-								data: titanOne400Data,
-								style: "normal" as const,
-								weight: 400 as const,
-							},
 							{
 								name: "Geist Sans",
 								data: geistSans400Data,

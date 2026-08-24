@@ -9,23 +9,23 @@
  * NOTE: Whitelabel mode does NOT use these defaults - all values must be
  * provided via environment variables.
  */
-export const DEFAULT_APP_NAME = "Elmo";
-export const DEFAULT_APP_ICON = "/icons/elmo-icon.svg";
+export const DEFAULT_APP_NAME = "OpenGEO";
+export const DEFAULT_APP_ICON = "/icons/opengeo-icon.svg";
 export const DEFAULT_APP_URL = "http://localhost:3000/";
 
 /** Provider setup guide, linked from SCRAPE_TARGETS errors and the LLMs page. */
 export const PROVIDERS_DOCS_URL = "https://docs.elmohq.com/docs/user-guide/providers";
 
 /**
- * Elmo brand constants — used for icon generation, manifest, and the brand kit.
+ * OpenGEO brand constants — used for icon generation, manifest, and the brand kit.
  */
-export const ELMO_BRAND_COLOR = "#2563eb"; // blue-600
-export const ELMO_BRAND_FONT = "Titan One";
-export const ELMO_THEME_COLOR = "#2563eb";
-export const ELMO_BACKGROUND_COLOR = "#ffffff";
+export const OPENGEO_BRAND_COLOR = "#0E6B5B"; // OpenGEO teal
+export const OPENGEO_BRAND_FONT = "system-ui";
+export const OPENGEO_THEME_COLOR = "#0E6B5B";
+export const OPENGEO_BACKGROUND_COLOR = "#ffffff";
 
 /**
- * Default chart colors for the Elmo product.
+ * Default chart colors for the product.
  *
  * 11 base hues (Observable + Tableau, anchored to brand blue) expanded
  * into 55 colors across five lightness tiers: base → dark → light →

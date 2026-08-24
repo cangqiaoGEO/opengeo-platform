@@ -16,7 +16,7 @@ export function NavAppInfo() {
 	return (
 		<div className="mx-2 mt-1 flex items-center gap-2 border-t border-sidebar-border/60 px-1 pt-2">
 			<a
-				href={`https://github.com/elmohq/elmo/releases/tag/v${__APP_VERSION__}`}
+				href={`https://github.com/cangqiaoGEO/opengeo-platform/releases/tag/v${__APP_VERSION__}`}
 				target="_blank"
 				rel="noreferrer"
 				className="flex-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -25,14 +25,14 @@ export function NavAppInfo() {
 			</a>
 			<div className="flex items-center gap-1">
 				<Tooltip>
-					<TooltipTrigger render={<a href="https://www.elmohq.com/" target="_blank" className={linkClass} />}>
+					<TooltipTrigger render={<a href="https://github.com/cangqiaoGEO/opengeo-platform" target="_blank" className={linkClass} />}>
 						<IconWorld className="size-4" />
 					</TooltipTrigger>
-					<TooltipContent>elmohq.com</TooltipContent>
+					<TooltipContent>OpenGEO Platform</TooltipContent>
 				</Tooltip>
 				<Tooltip>
 					<TooltipTrigger
-						render={<a href="https://github.com/elmohq/elmo" target="_blank" rel="noreferrer" className={linkClass} />}
+						render={<a href="https://github.com/cangqiaoGEO/opengeo-platform" target="_blank" rel="noreferrer" className={linkClass} />}
 					>
 						<IconBrandGithub className="size-4" />
 					</TooltipTrigger>

@@ -19,7 +19,6 @@
 	--color-foreground: var(--foreground);
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);
-	--font-titan-one: "Titan One", cursive;
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -58,13 +57,6 @@
 /* font-display: block (not swap) so the wordmark never flashes the cursive
    fallback before swapping; __root.tsx preloads this exact file to keep the
    block window imperceptible. */
-@font-face {
-	font-family: "Titan One";
-	font-style: normal;
-	font-weight: 400;
-	src: url("@fontsource/titan-one/files/titan-one-latin-400-normal.woff2") format("woff2");
-	font-display: block;
-}
 
 :root {
 	--radius: 0.625rem;

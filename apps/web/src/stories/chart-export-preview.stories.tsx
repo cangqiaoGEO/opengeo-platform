@@ -66,7 +66,7 @@ function generateChartData(days: number) {
 const defaultClientConfig: ClientConfig = {
 	mode: "local",
 	features: { readOnly: false, showOptimizeButton: false, canCreateBrands: true },
-	branding: { name: "Elmo", chartColors: DEFAULT_CHART_COLORS },
+	branding: { name: "OpenGEO", chartColors: DEFAULT_CHART_COLORS },
 	analytics: {},
 };
 
@@ -96,7 +96,7 @@ export default {
 	title: "Chart Export Preview",
 } satisfies Meta;
 
-export const ElmoDefault = () => {
+export const DefaultBrand = () => {
 	setupMocks();
 	const data = generateChartData(30);
 	const branding = { isWhitelabel: false, chartColors: DEFAULT_CHART_COLORS };
@@ -104,7 +104,7 @@ export const ElmoDefault = () => {
 	return (
 		<MockRouteContextProvider value={{ clientConfig: defaultClientConfig }}>
 			<div className="p-6 space-y-8">
-				<Section label="Default (Elmo) — standard prompt">
+				<Section label="Default (OpenGEO) — standard prompt">
 					<ExportPreview
 						promptName="What are the best running shoes for marathon training?"
 						visibility={80}
@@ -116,7 +116,7 @@ export const ElmoDefault = () => {
 					/>
 				</Section>
 
-				<Section label="Default (Elmo) — long prompt name (should truncate)">
+				<Section label="Default (OpenGEO) — long prompt name (should truncate)">
 					<ExportPreview
 						promptName="What are the best running shoes for long distance marathon training on trails and roads with good arch support and cushioning for heavy runners who overpronate?"
 						visibility={55}
@@ -128,7 +128,7 @@ export const ElmoDefault = () => {
 					/>
 				</Section>
 
-				<Section label="Default (Elmo) — high visibility">
+				<Section label="Default (OpenGEO) — high visibility">
 					<ExportPreview
 						promptName="Best trail running shoes 2025"
 						visibility={95}

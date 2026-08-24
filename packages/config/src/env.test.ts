@@ -51,7 +51,7 @@ describe("cloud env requirements", () => {
 			RESEND_API_KEY: "re_test_x",
 			GOOGLE_CLIENT_ID: "test-google-client-id",
 			GOOGLE_CLIENT_SECRET: "test-google-client-secret",
-			RESEND_FROM_EMAIL: "Elmo <notifications@example.com>",
+			RESEND_FROM_EMAIL: "OpenGEO <notifications@example.com>",
 		};
 		const { missing } = validateEnvRequirements(cloudReqs, env);
 		const missingIds = new Set(missing.map((entry) => entry.id));

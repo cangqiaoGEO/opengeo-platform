@@ -1,4 +1,4 @@
-import { ELMO_BRAND_COLOR } from "@workspace/config/constants";
+import { OPENGEO_BRAND_COLOR } from "@workspace/config/constants";
 import { ACCENT_COLORS } from "@workspace/og/render";
 import {
 	overallStatus,
@@ -89,7 +89,7 @@ export function renderStatusOgImage(data: TargetStatus[]) {
 					style={{
 						fontFamily: "Titan One",
 						fontSize: 46,
-						color: ELMO_BRAND_COLOR,
+						color: OPENGEO_BRAND_COLOR,
 						lineHeight: 1,
 					}}
 				>

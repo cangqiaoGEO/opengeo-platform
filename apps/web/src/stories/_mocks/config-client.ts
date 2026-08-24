@@ -58,7 +58,7 @@ let _config: ClientConfig = {
 		canCreateBrands: false,
 	},
 	branding: {
-		name: "Elmo",
+		name: "OpenGEO",
 		chartColors: DEFAULT_CHART_COLORS,
 	},
 	analytics: {},

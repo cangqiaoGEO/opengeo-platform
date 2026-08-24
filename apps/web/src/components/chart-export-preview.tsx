@@ -44,7 +44,7 @@ export function ChartExportPreview({
 }: ChartExportPreviewProps) {
 	const name = branding.name || DEFAULT_APP_NAME;
 	const isWhitelabel = branding.isWhitelabel && branding.name !== DEFAULT_APP_NAME;
-	const domain = isWhitelabel ? branding.parentUrl?.replace(/^https?:\/\//, "").replace(/\/$/, "") || "" : "elmohq.com";
+	const domain = isWhitelabel ? branding.parentUrl?.replace(/^https?:\/\//, "").replace(/\/$/, "") || "" : "github.com/cangqiaoGEO";
 	const hasCustomIcon = branding.icon && branding.icon !== DEFAULT_APP_ICON;
 
 	return (
@@ -107,8 +107,8 @@ export function ChartExportPreview({
 							{name}
 						</span>
 					) : (
-						<span className="font-titan-one font-normal lowercase text-blue-600" style={{ fontSize: 24 }}>
-							elmo
+						<span className="font-bold tracking-tight text-[#0E6B5B]" style={{ fontSize: 20 }}>
+							OpenGEO
 						</span>
 					)}
 				</div>

@@ -9,7 +9,7 @@ interface RouteMatchContext {
 }
 
 export function getAppName(match: RouteMatchContext): string {
-	return match.context?.clientConfig?.branding?.name || "Elmo";
+	return match.context?.clientConfig?.branding?.name || "OpenGEO";
 }
 
 /**

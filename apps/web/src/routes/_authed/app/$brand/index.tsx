@@ -22,6 +22,7 @@ import PromptWizard from "@/components/prompt-wizard";
 import { useBrand } from "@/hooks/use-brands";
 import { useDashboardSummary } from "@/hooks/use-dashboard-summary";
 import { useShareOfVoice } from "@/hooks/use-share-of-voice";
+import { ExecutiveKpis } from "@/components/executive-kpis";
 import { TrendChart } from "@/components/trend-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import { buttonVariants } from "@workspace/ui/components/button";
@@ -366,6 +367,18 @@ function DashboardPage() {
 	return (
 		<div className="flex flex-1 flex-col">
 			<div className="m-auto flex w-full max-w-[1600px] flex-col gap-3 p-4">
+				{/* The thirty-second read, before any chart asks for interpretation. */}
+				<ExecutiveKpis
+					visibility={currentVisibility}
+					visibilityTrend={visibilityTimeSeries.map((p) => ({ value: p.overall }))}
+					shareOfVoice={sovShare}
+					sovTrend={(sovData?.shareTimeSeries ?? []).map((p) => ({ value: p.share }))}
+					totalRuns={dashboardSummary?.totalRuns ?? 0}
+					totalPrompts={totalPrompts}
+					engineCount={trackedTargets.length}
+					isLoading={isLoading || isLoadingSov}
+				/>
+
 				{/* Section 1: AI Visibility */}
 				<section className="space-y-2">
 					<div className="flex items-center justify-between">

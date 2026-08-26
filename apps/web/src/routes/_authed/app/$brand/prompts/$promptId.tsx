@@ -33,6 +33,7 @@ import { usePromptRunsOnly } from "@/hooks/use-prompt-runs-only";
 import { useQueryFanout } from "@/hooks/use-query-fanout";
 import { getPromptMetadataFn } from "@/server/prompts";
 import { ResponseMarkdown } from "@/components/response-markdown";
+import { VerifyOnPlatform } from "@/components/verify-on-platform";
 import { extractTextContent } from "@workspace/lib/text-extraction";
 
 // -------------------------------------------------------------------
@@ -343,6 +344,7 @@ function PromptHistoryPage() {
 						currentPage={currentPage}
 						onPageChange={handlePageChange}
 						brandName={brand?.name}
+						promptValue={promptMeta?.value ?? ""}
 					/>
 				)}
 			</div>
@@ -561,6 +563,7 @@ function ResponsesTab({
 	currentPage,
 	onPageChange,
 	brandName,
+	promptValue,
 }: {
 	runs: any[];
 	pagination: any;
@@ -568,6 +571,7 @@ function ResponsesTab({
 	currentPage: number;
 	onPageChange: (page: number) => void;
 	brandName?: string;
+	promptValue: string;
 }) {
 	const formatDate = (dateString: string) => new Date(dateString).toLocaleString(undefined, { timeZoneName: "short" });
 
@@ -618,19 +622,22 @@ function ResponsesTab({
 			{runs.map((run: any) => (
 				<Card key={run.id}>
 					<CardHeader className="pb-0 gap-y-0">
-						<div className="grid grid-cols-3 gap-x-4 text-sm">
-							<div>
-								<span className="text-muted-foreground block text-xs mb-0.5">Model</span>
-								<span>{getModelDisplayName(run.model)}</span>
+						<div className="flex items-start justify-between gap-4">
+							<div className="grid grid-cols-3 gap-x-4 text-sm flex-1 min-w-0">
+								<div>
+									<span className="text-muted-foreground block text-xs mb-0.5">Model</span>
+									<span>{getModelDisplayName(run.model)}</span>
+								</div>
+								<div>
+									<span className="text-muted-foreground block text-xs mb-0.5">Version</span>
+									<span>{run.version}</span>
+								</div>
+								<div>
+									<span className="text-muted-foreground block text-xs mb-0.5">Evaluated</span>
+									<span>{formatDate(run.createdAt)}</span>
+								</div>
 							</div>
-							<div>
-								<span className="text-muted-foreground block text-xs mb-0.5">Version</span>
-								<span>{run.version}</span>
-							</div>
-							<div>
-								<span className="text-muted-foreground block text-xs mb-0.5">Evaluated</span>
-								<span>{formatDate(run.createdAt)}</span>
-							</div>
+							<VerifyOnPlatform model={run.model} prompt={promptValue} access={run.access} />
 						</div>
 					</CardHeader>
 					<Separator />

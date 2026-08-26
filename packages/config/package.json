@@ -16,7 +16,8 @@
 		"./plans": "./src/plans.ts",
 		"./roles": "./src/roles.ts",
 		"./scrape-targets": "./src/scrape-targets.ts",
-		"./types": "./src/types.ts"
+		"./types": "./src/types.ts",
+		"./verify-links": "./src/verify-links.ts"
 	},
 	"dependencies": {
 		"zod": "^4.4.3"

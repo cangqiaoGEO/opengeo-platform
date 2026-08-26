@@ -1,85 +1,112 @@
 {
-  "nav": {
-    "dashboard": "仪表盘",
-    "overview": "总览",
-    "visibility": "可见度",
-    "shareOfVoice": "竞对份额",
-    "queryFanOut": "检索扩散",
-    "citations": "引用来源",
-    "opportunities": "机会点",
-    "settings": "设置",
-    "brand": "品牌",
-    "competitors": "竞对",
-    "prompts": "查询语句",
-    "llms": "引擎与模型",
-    "team": "团队",
-    "billing": "账单",
-    "reports": "报告",
-    "brands": "品牌管理",
-    "workflows": "工作流",
-    "tools": "工具",
-    "admin": "管理"
-  },
-  "pages": {
-    "visibility": {
-      "title": "可见度",
-      "description": "看 AI 引擎在与你品牌相关的问题中如何作答。"
-    },
-    "citations": {
-      "title": "引用来源",
-      "description": "看 AI 引擎回答你的查询时引用了哪些来源。",
-      "noMatches": "当前筛选条件下没有引用记录。"
-    },
-    "opportunities": {
-      "title": "机会点",
-      "description": "基于已追踪的回答数据，生成值得创作、投放与铺设的内容建议，赢得更多 AI 引用。"
-    },
-    "queryFanOut": {
-      "title": "检索扩散",
-      "description": "AI 引擎回答你的查询前实际执行的联网搜索词。"
-    },
-    "shareOfVoice": {
-      "title": "竞对份额",
-      "trends": "竞对份额趋势",
-      "leaderboard": "竞对份额榜"
-    },
-    "brandSwitcher": {
-      "title": "品牌切换",
-      "description": "选择一个品牌开始",
-      "create": "+ 新建品牌"
-    }
-  },
-  "filters": {
-    "allModels": "全部引擎",
-    "tags": "标签",
-    "sort": "排序",
-    "searchPrompts": "搜索查询语句…",
-    "lookback": {
-      "1w": "近 7 天",
-      "1m": "近 30 天",
-      "3m": "近 3 个月",
-      "6m": "近 6 个月",
-      "1y": "近 12 个月",
-      "all": "全部时间"
-    }
-  },
-  "actions": {
-    "viewDetails": "查看明细",
-    "exportPng": "导出图片（PNG）",
-    "exporting": "导出中…"
-  },
-  "auth": {
-    "createAccount": "创建账号",
-    "signUpSubtitle": "注册后即可开始",
-    "signIn": "登录",
-    "name": "姓名",
-    "email": "邮箱",
-    "password": "密码",
-    "namePlaceholder": "你的名字",
-    "passwordPlaceholder": "设置密码",
-    "creatingAccount": "正在创建…"
-  },
-  "language": {
-    "label": "语言"
-  }
+	"nav": {
+		"dashboard": "仪表盘",
+		"overview": "总览",
+		"visibility": "可见度",
+		"shareOfVoice": "竞对份额",
+		"queryFanOut": "检索扩散",
+		"citations": "引用来源",
+		"opportunities": "机会点",
+		"settings": "设置",
+		"brand": "品牌",
+		"competitors": "竞对",
+		"prompts": "查询语句",
+		"llms": "引擎与模型",
+		"team": "团队",
+		"billing": "账单",
+		"reports": "报告",
+		"brands": "品牌管理",
+		"workflows": "工作流",
+		"tools": "工具",
+		"admin": "管理"
+	},
+	"pages": {
+		"visibility": {
+			"title": "可见度",
+			"description": "看 AI 引擎在与你品牌相关的问题中如何作答。"
+		},
+		"citations": {
+			"title": "引用来源",
+			"description": "看 AI 引擎回答你的查询时引用了哪些来源。",
+			"noMatches": "当前筛选条件下没有引用记录。"
+		},
+		"opportunities": {
+			"title": "机会点",
+			"description": "基于已追踪的回答数据，生成值得创作、投放与铺设的内容建议，赢得更多 AI 引用。"
+		},
+		"queryFanOut": {
+			"title": "检索扩散",
+			"description": "AI 引擎回答你的查询前实际执行的联网搜索词。"
+		},
+		"shareOfVoice": {
+			"title": "竞对份额",
+			"trends": "竞对份额趋势",
+			"leaderboard": "竞对份额榜"
+		},
+		"brandSwitcher": {
+			"title": "品牌切换",
+			"description": "选择一个品牌开始",
+			"create": "+ 新建品牌"
+		}
+	},
+	"filters": {
+		"allModels": "全部引擎",
+		"tags": "标签",
+		"sort": "排序",
+		"searchPrompts": "搜索查询语句…",
+		"lookback": {
+			"1w": "近 7 天",
+			"1m": "近 30 天",
+			"3m": "近 3 个月",
+			"6m": "近 6 个月",
+			"1y": "近 12 个月",
+			"all": "全部时间"
+		}
+	},
+	"actions": {
+		"viewDetails": "查看明细",
+		"exportPng": "导出图片（PNG）",
+		"exporting": "导出中…"
+	},
+	"auth": {
+		"createAccount": "创建账号",
+		"signUpSubtitle": "注册后即可开始",
+		"signIn": "登录",
+		"name": "姓名",
+		"email": "邮箱",
+		"password": "密码",
+		"namePlaceholder": "你的名字",
+		"passwordPlaceholder": "设置密码",
+		"creatingAccount": "正在创建…"
+	},
+	"language": {
+		"label": "语言"
+	},
+	"verify": {
+		"button": "去平台验证",
+		"tooltipPrefill": "在 {{platform}} 用同一个问题实测——AI 现在怎么说，眼见为实",
+		"tooltipPaste": "打开 {{platform}}，粘贴这个问题实测（该平台不支持链接预填）",
+		"note": "实测结果会与本次观测不同：AI 答案随时间与用户而变",
+		"apiCaveat": "本次为 API 通道观测（模型裸答案），平台链接打开的是消费者产品界面"
+	},
+	"kpis": {
+		"visibility": {
+			"label": "AI 可见度",
+			"hint": "品牌在追踪问题的 AI 答案中被提及的比例，按引擎等权聚合。实测值，非估算。"
+		},
+		"shareOfVoice": {
+			"label": "竞对份额 SoV",
+			"hint": "品牌提及数 ÷（品牌提及数 + 竞对提及数）。分母为零时不计分，不折算为 0。"
+		},
+		"runs": {
+			"label": "观测次数",
+			"hint": "周期内实际执行的 AI 问答次数——每个数字背后都有一条可查的原始回答。",
+			"sub": "覆盖 {{count}} 个追踪问题"
+		},
+		"engines": {
+			"label": "覆盖引擎数",
+			"hint": "当前该品牌实际在追踪的引擎与通道数量。",
+			"sub": "正在追踪"
+		}
+	}
 }

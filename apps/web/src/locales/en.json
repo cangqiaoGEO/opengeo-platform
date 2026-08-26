@@ -1,85 +1,112 @@
 {
-  "nav": {
-    "dashboard": "Dashboard",
-    "overview": "Overview",
-    "visibility": "Visibility",
-    "shareOfVoice": "Share of Voice",
-    "queryFanOut": "Query Fan-Out",
-    "citations": "Citations",
-    "opportunities": "Opportunities",
-    "settings": "Settings",
-    "brand": "Brand",
-    "competitors": "Competitors",
-    "prompts": "Prompts",
-    "llms": "LLMs",
-    "team": "Team",
-    "billing": "Billing",
-    "reports": "Reports",
-    "brands": "Brands",
-    "workflows": "Workflows",
-    "tools": "Tools",
-    "admin": "Admin"
-  },
-  "pages": {
-    "visibility": {
-      "title": "Visibility",
-      "description": "See how LLMs are evaluating prompts related to your brand."
-    },
-    "citations": {
-      "title": "Citations",
-      "description": "See which sources LLMs cite when responding to your prompts.",
-      "noMatches": "No citations found for the selected filters."
-    },
-    "opportunities": {
-      "title": "Opportunities",
-      "description": "What to create, pitch, and seed to earn more AI citations — generated from your tracked answer data."
-    },
-    "queryFanOut": {
-      "title": "Query Fan-Out",
-      "description": "The web searches AI engines run when answering your prompts."
-    },
-    "shareOfVoice": {
-      "title": "Share of Voice",
-      "trends": "Share of Voice Trends",
-      "leaderboard": "Share of Voice Leaderboard"
-    },
-    "brandSwitcher": {
-      "title": "Brand Switcher",
-      "description": "Select a brand to get started",
-      "create": "+ Create new brand"
-    }
-  },
-  "filters": {
-    "allModels": "All models",
-    "tags": "Tags",
-    "sort": "Sort",
-    "searchPrompts": "Search prompts...",
-    "lookback": {
-      "1w": "Last 7 days",
-      "1m": "Last 30 days",
-      "3m": "Last 3 months",
-      "6m": "Last 6 months",
-      "1y": "Last 12 months",
-      "all": "All time"
-    }
-  },
-  "actions": {
-    "viewDetails": "View Details",
-    "exportPng": "Export (PNG)",
-    "exporting": "Exporting..."
-  },
-  "auth": {
-    "createAccount": "Create account",
-    "signUpSubtitle": "Sign up to get started",
-    "signIn": "Sign in",
-    "name": "Name",
-    "email": "Email",
-    "password": "Password",
-    "namePlaceholder": "Your name",
-    "passwordPlaceholder": "Create a password",
-    "creatingAccount": "Creating account..."
-  },
-  "language": {
-    "label": "Language"
-  }
+	"nav": {
+		"dashboard": "Dashboard",
+		"overview": "Overview",
+		"visibility": "Visibility",
+		"shareOfVoice": "Share of Voice",
+		"queryFanOut": "Query Fan-Out",
+		"citations": "Citations",
+		"opportunities": "Opportunities",
+		"settings": "Settings",
+		"brand": "Brand",
+		"competitors": "Competitors",
+		"prompts": "Prompts",
+		"llms": "LLMs",
+		"team": "Team",
+		"billing": "Billing",
+		"reports": "Reports",
+		"brands": "Brands",
+		"workflows": "Workflows",
+		"tools": "Tools",
+		"admin": "Admin"
+	},
+	"pages": {
+		"visibility": {
+			"title": "Visibility",
+			"description": "See how LLMs are evaluating prompts related to your brand."
+		},
+		"citations": {
+			"title": "Citations",
+			"description": "See which sources LLMs cite when responding to your prompts.",
+			"noMatches": "No citations found for the selected filters."
+		},
+		"opportunities": {
+			"title": "Opportunities",
+			"description": "What to create, pitch, and seed to earn more AI citations — generated from your tracked answer data."
+		},
+		"queryFanOut": {
+			"title": "Query Fan-Out",
+			"description": "The web searches AI engines run when answering your prompts."
+		},
+		"shareOfVoice": {
+			"title": "Share of Voice",
+			"trends": "Share of Voice Trends",
+			"leaderboard": "Share of Voice Leaderboard"
+		},
+		"brandSwitcher": {
+			"title": "Brand Switcher",
+			"description": "Select a brand to get started",
+			"create": "+ Create new brand"
+		}
+	},
+	"filters": {
+		"allModels": "All models",
+		"tags": "Tags",
+		"sort": "Sort",
+		"searchPrompts": "Search prompts...",
+		"lookback": {
+			"1w": "Last 7 days",
+			"1m": "Last 30 days",
+			"3m": "Last 3 months",
+			"6m": "Last 6 months",
+			"1y": "Last 12 months",
+			"all": "All time"
+		}
+	},
+	"actions": {
+		"viewDetails": "View Details",
+		"exportPng": "Export (PNG)",
+		"exporting": "Exporting..."
+	},
+	"auth": {
+		"createAccount": "Create account",
+		"signUpSubtitle": "Sign up to get started",
+		"signIn": "Sign in",
+		"name": "Name",
+		"email": "Email",
+		"password": "Password",
+		"namePlaceholder": "Your name",
+		"passwordPlaceholder": "Create a password",
+		"creatingAccount": "Creating account..."
+	},
+	"language": {
+		"label": "Language"
+	},
+	"verify": {
+		"button": "Verify on platform",
+		"tooltipPrefill": "Ask {{platform}} the same question now and see for yourself",
+		"tooltipPaste": "Open {{platform}} and paste this question ({{platform}} can't take it from a link)",
+		"note": "Live answers will differ from this run — AI answers change over time and per user",
+		"apiCaveat": "This run observed the model via API; the link opens the consumer product instead"
+	},
+	"kpis": {
+		"visibility": {
+			"label": "AI visibility",
+			"hint": "How often AI answers mention your brand across tracked prompts, weighted equally per engine. Measured, not projected."
+		},
+		"shareOfVoice": {
+			"label": "Share of voice",
+			"hint": "Brand mentions ÷ (brand + competitor mentions). Scores nothing when nobody was mentioned rather than counting it as zero."
+		},
+		"runs": {
+			"label": "Observations",
+			"hint": "AI answers actually collected this period — every number above traces back to one of them.",
+			"sub": "across {{count}} tracked prompts"
+		},
+		"engines": {
+			"label": "Engines covered",
+			"hint": "Engines and channels this brand is currently tracked on.",
+			"sub": "currently tracked"
+		}
+	}
 }

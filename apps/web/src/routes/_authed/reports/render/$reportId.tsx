@@ -12,6 +12,7 @@ import { PromptChartPrint } from "@/components/prompt-chart-print";
 import { Target, BarChart3, Rocket } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useRouteContext } from "@tanstack/react-router";
+import { OPENGEO_BRAND_COLOR } from "@workspace/config/constants";
 import type { ClientConfig } from "@workspace/config/types";
 import {
 	computeOverallSoV,
@@ -95,6 +96,12 @@ function isPromptBranded(promptValue: string, brandName: string, brandWebsite: s
 // ---------- Route ----------
 
 export const Route = createFileRoute("/_authed/reports/render/$reportId")({
+	// The default report is a plain document, which is what an internal reader
+	// wants. Agencies handing the same report to a client want it to look like a
+	// deliverable, so the cover treatment — and only the cover treatment — is
+	// switchable. No figure on any page changes with it.
+	validateSearch: (search: Record<string, unknown>): { skin?: "plain" | "branded" } =>
+		search.skin === "branded" ? { skin: "branded" } : {},
 	loader: async ({ params }) => {
 		const report = await loadReportData({ data: params.reportId });
 		if (!report) throw notFound();
@@ -119,8 +126,12 @@ function sovBgColor(sov: number | null): string {
 
 function ReportRenderPage() {
 	const { report } = Route.useLoaderData();
+	const { skin } = Route.useSearch();
 	const context = useRouteContext({ strict: false }) as { clientConfig?: ClientConfig };
 	const branding = context.clientConfig?.branding;
+	const isBranded = skin === "branded";
+	// Whitelabel deployments lead with their own accent; everyone else gets ours.
+	const accent = branding?.chartColors?.[0] ?? OPENGEO_BRAND_COLOR;
 
 	if (report.status !== "completed") {
 		return (
@@ -295,7 +306,19 @@ function ReportRenderPage() {
 
 			{/* ===== PAGE 1: COVER ===== */}
 			<div className="print:h-[9.5in] print:flex print:flex-col p-10 print:p-0">
-				<div className="h-[3px] bg-slate-800 -mx-10 print:-mx-0 mb-8" />
+				{isBranded ? (
+					<div
+						className="-mx-10 -mt-10 print:-mx-0 print:-mt-0 mb-8 px-10 py-12 print:px-8"
+						style={{ background: `linear-gradient(135deg, ${accent} 0%, ${accent}CC 55%, ${accent}80 100%)` }}
+					>
+						<div className="text-[10px] font-semibold tracking-[0.25em] uppercase text-white/75">
+							AI Share of Voice Report
+						</div>
+						<div className="mt-2 text-white text-3xl font-bold tracking-tight">{report.brandName}</div>
+					</div>
+				) : (
+					<div className="h-[3px] bg-slate-800 -mx-10 print:-mx-0 mb-8" />
+				)}
 
 				<div className="flex items-center justify-between mb-16">
 					<Logo iconClassName="!size-5" textClassName="text-sm font-semibold text-slate-400" />
@@ -305,11 +328,18 @@ function ReportRenderPage() {
 				</div>
 
 				<div className="flex-1 flex flex-col justify-center">
-					<div className="text-[10px] font-semibold tracking-[0.25em] uppercase text-slate-400 mb-4">
-						AI Share of Voice Report
-					</div>
-					<h1 className="text-4xl font-bold tracking-tight mb-2">{report.brandName}</h1>
-					<div className="w-16 h-[2px] bg-slate-800 mb-12" />
+					{!isBranded && (
+						<>
+							<div className="text-[10px] font-semibold tracking-[0.25em] uppercase text-slate-400 mb-4">
+								AI Share of Voice Report
+							</div>
+							<h1 className="text-4xl font-bold tracking-tight mb-2">{report.brandName}</h1>
+						</>
+					)}
+					<div
+						className={`w-16 h-[2px] mb-12 ${isBranded ? "" : "bg-slate-800"}`}
+						style={isBranded ? { backgroundColor: accent } : undefined}
+					/>
 
 					<div className="bg-slate-50 rounded-xl p-8 max-w-md mb-12">
 						<div className="flex items-baseline gap-4">

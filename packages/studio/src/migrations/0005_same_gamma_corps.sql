@@ -1,0 +1,1 @@
+ALTER TABLE "studio_content_drafts" ADD COLUMN "block_reasons" text[] DEFAULT '{}' NOT NULL;

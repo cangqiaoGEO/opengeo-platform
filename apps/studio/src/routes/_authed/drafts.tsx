@@ -4,8 +4,33 @@ import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import { Input } from "@workspace/ui/components/input";
 import { useState } from "react";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { getDraft, reviewDraft } from "@/server/review";
 import { listDrafts } from "@/server/tasks";
+
+const BLOCK_REASONS: Record<string, string> = {
+	unsupported_claims: "有事实库支撑不了的说法",
+	ad_law_terms: "含绝对化用语",
+	language_mismatch: "语言与目标问题不一致",
+};
+
+/**
+ * The model cites entries by id, which is what makes the binding checkable —
+ * and unreadable. Swap each id for the number of the source in the list below
+ * the article, so a reviewer reads prose with footnotes instead of UUIDs.
+ */
+function withFootnotes(body: string): string {
+	const order: string[] = [];
+	return body.replace(/\[([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\]/g, (_m, id: string) => {
+		let index = order.indexOf(id);
+		if (index === -1) {
+			order.push(id);
+			index = order.length - 1;
+		}
+		return `[${index + 1}]`;
+	});
+}
 
 const STATUS: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
 	generating: { label: "生成中", variant: "secondary" },
@@ -80,8 +105,14 @@ function DraftsPage() {
 										<CardTitle className="text-base leading-snug">{d.title}</CardTitle>
 										<Badge variant={status.variant}>{status.label}</Badge>
 									</div>
-									<div className="text-muted-foreground flex flex-wrap gap-3 text-xs">
+									<div className="text-muted-foreground flex flex-wrap items-center gap-3 text-xs">
+										<span className="underline underline-offset-2">{isOpen ? "收起原稿" : "查看原稿"}</span>
 										<span>{d.modelVersion}</span>
+										{d.blockReasons?.map((r) => (
+											<span key={r} className="text-destructive">
+												{BLOCK_REASONS[r] ?? r}
+											</span>
+										))}
 										{d.unsupportedClaims.length > 0 && (
 											<span className="text-destructive">{d.unsupportedClaims.length} 条无据说法</span>
 										)}
@@ -107,12 +138,15 @@ function DraftsPage() {
 										{detail.citations.length > 0 && (
 											<div>
 												<p className="text-muted-foreground mb-2 font-mono text-xs tracking-widest uppercase">
-													引用了 {detail.citations.length} 条事实
+													引用了 {detail.citations.length} 条事实（正文角标与此处编号对应）
 												</p>
 												<div className="divide-y rounded-md border text-sm">
 													{detail.citations.map((c, i) => (
 														<div key={i} className="p-3">
-															<p>{c.claim}</p>
+															<p>
+																<span className="text-muted-foreground mr-2 font-mono text-xs">[{i + 1}]</span>
+																{c.claim}
+															</p>
 															<p className="text-muted-foreground mt-1 text-xs">
 																← [{c.entryField}] {c.entryContent}
 																{!c.approved && <span className="text-amber-600"> · 该条尚未核准</span>}
@@ -136,7 +170,9 @@ function DraftsPage() {
 											</div>
 										)}
 
-										<article className="prose prose-sm max-w-none whitespace-pre-wrap">{detail.draft.body}</article>
+										<article className="prose prose-sm dark:prose-invert max-w-none">
+											<Markdown remarkPlugins={[remarkGfm]}>{withFootnotes(detail.draft.body)}</Markdown>
+										</article>
 
 										{detail.history.length > 0 && (
 											<div className="text-muted-foreground space-y-1 text-xs">
@@ -148,6 +184,16 @@ function DraftsPage() {
 												))}
 											</div>
 										)}
+
+										<div className="flex gap-2 border-t pt-4">
+											<Button
+												size="sm"
+												variant="ghost"
+												onClick={() => navigator.clipboard.writeText(`# ${detail.draft.title}\n\n${detail.draft.body}`)}
+											>
+												复制原文
+											</Button>
+										</div>
 
 										{(d.status === "pending_review" || d.status === "needs_facts") && (
 											<div className="space-y-2 border-t pt-4">

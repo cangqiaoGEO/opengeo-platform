@@ -271,6 +271,10 @@ export const contentDrafts = pgTable(
 		unsupportedClaims: text("unsupported_claims").array().notNull().default([]),
 		/** Ad-law terms found in the body, whether or not the org blocks on them. */
 		flaggedTerms: text("flagged_terms").array().notNull().default([]),
+		/** Why this draft is held, when it is. Kept as reasons rather than folded
+		 *  into the status because "待补事实" and "写错语言" need different work from
+		 *  different people, and a single status cannot say which. */
+		blockReasons: text("block_reasons").array().notNull().default([]),
 		modelVersion: text("model_version"),
 		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 		updatedAt: timestamp("updated_at", { withTimezone: true })

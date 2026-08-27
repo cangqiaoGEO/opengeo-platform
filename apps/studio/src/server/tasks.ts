@@ -132,6 +132,7 @@ export const listDrafts = createServerFn({ method: "GET" })
 				status: contentDrafts.status,
 				unsupportedClaims: contentDrafts.unsupportedClaims,
 				flaggedTerms: contentDrafts.flaggedTerms,
+				blockReasons: contentDrafts.blockReasons,
 				modelVersion: contentDrafts.modelVersion,
 				createdAt: contentDrafts.createdAt,
 			})

@@ -38,6 +38,24 @@ const AD_LAW_TERMS = ["最好", "最佳", "最优", "第一", "唯一", "国家�
 
 export type FactBinding = "strict" | "warn" | "off";
 
+export type BlockReason = "unsupported_claims" | "ad_law_terms" | "language_mismatch";
+
+const CJK = /[\u4e00-\u9fff]/;
+
+/**
+ * Which language a piece of text is written in, to the only resolution that
+ * matters here: an article answering an English query has to be in English.
+ * A Chinese article written for `power lift chair supplier for senior living
+ * facilities` will never appear in that answer, however good it is.
+ */
+export function detectLanguage(text: string): "zh" | "en" {
+	const cjk = (text.match(/[\u4e00-\u9fff]/g) ?? []).length;
+	const latin = (text.match(/[A-Za-z]/g) ?? []).length;
+	// Latin runs long in Chinese text too (brand names, units), so weight it:
+	// a page is Chinese as soon as CJK carries a meaningful share of it.
+	return cjk * 4 >= latin ? "zh" : "en";
+}
+
 export async function generateDraft(args: {
 	taskId: string;
 	brandId: string;
@@ -86,8 +104,16 @@ export async function generateDraft(args: {
 
 	const flaggedTerms = AD_LAW_TERMS.filter((term) => draft.body.includes(term) || draft.title.includes(term));
 
-	const blockedByFacts = args.factBinding === "strict" && unsupported.length > 0;
-	const blockedByTerms = args.blockAdLawTerms && flaggedTerms.length > 0;
+	const promptLanguage = detectLanguage(args.promptValue);
+	const draftLanguage = detectLanguage(`${draft.title}\n${draft.body}`);
+	const verdict = classifyDraft({
+		unsupported,
+		flaggedTerms,
+		factBinding: args.factBinding,
+		blockAdLawTerms: args.blockAdLawTerms,
+		promptLanguage,
+		draftLanguage,
+	});
 
 	const [row] = await db
 		.insert(contentDrafts)
@@ -96,9 +122,10 @@ export async function generateDraft(args: {
 			brandId: args.brandId,
 			title: draft.title,
 			body: draft.body,
-			status: blockedByFacts || blockedByTerms ? "needs_facts" : "pending_review",
+			status: verdict.status,
 			unsupportedClaims: unsupported,
 			flaggedTerms,
+			blockReasons: verdict.reasons,
 			modelVersion: result.modelVersion,
 		})
 		.returning();
@@ -113,9 +140,12 @@ export async function generateDraft(args: {
 		draftId: row.id,
 		title: draft.title,
 		status: row.status,
+		blockReasons: verdict.reasons,
 		citations: validCitations.length,
 		unsupported: unsupported.length,
 		flaggedTerms,
+		promptLanguage,
+		draftLanguage,
 		expiredEntriesSkipped: expiredCount,
 	};
 }
@@ -126,10 +156,18 @@ export function classifyDraft(args: {
 	flaggedTerms: string[];
 	factBinding: FactBinding;
 	blockAdLawTerms: boolean;
-}): "needs_facts" | "pending_review" {
-	const blockedByFacts = args.factBinding === "strict" && args.unsupported.length > 0;
-	const blockedByTerms = args.blockAdLawTerms && args.flaggedTerms.length > 0;
-	return blockedByFacts || blockedByTerms ? "needs_facts" : "pending_review";
+	promptLanguage?: "zh" | "en";
+	draftLanguage?: "zh" | "en";
+}): { status: "needs_facts" | "pending_review"; reasons: BlockReason[] } {
+	const reasons: BlockReason[] = [];
+	if (args.factBinding === "strict" && args.unsupported.length > 0) reasons.push("unsupported_claims");
+	if (args.blockAdLawTerms && args.flaggedTerms.length > 0) reasons.push("ad_law_terms");
+	// Language is not a guardrail anyone turns off: a draft in the wrong language
+	// cannot answer the question it was written for, whatever the org's policy.
+	if (args.promptLanguage && args.draftLanguage && args.promptLanguage !== args.draftLanguage) {
+		reasons.push("language_mismatch");
+	}
+	return { status: reasons.length > 0 ? "needs_facts" : "pending_review", reasons };
 }
 
 export function findAdLawTerms(text: string): string[] {

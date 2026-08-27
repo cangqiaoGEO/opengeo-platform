@@ -1,5 +1,6 @@
 import { PROVIDERS_DOCS_URL } from "@workspace/config/constants";
 import { anthropicApi } from "./registry/anthropic-api";
+import { bailian } from "./registry/bailian";
 import { brightdata } from "./registry/brightdata";
 import { dashscope, deepseekApi, tencentTokenhub, volcengine } from "./registry/chinese-api";
 import { cloro } from "./registry/cloro";
@@ -36,6 +37,7 @@ const providerMap: Record<string, Provider> = {
 	"mistral-api": mistralApi,
 	dataforseo,
 	openrouter,
+	bailian,
 	stub,
 	volcengine,
 	dashscope,

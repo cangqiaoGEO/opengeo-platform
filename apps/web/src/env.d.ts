@@ -49,6 +49,8 @@ declare global {
 			readonly ANTHROPIC_API_KEY: string;
 			readonly MISTRAL_API_KEY?: string;
 			readonly OPENROUTER_API_KEY?: string;
+			readonly BAILIAN_API_KEY?: string;
+			readonly BAILIAN_BASE_URL?: string;
 			readonly ARK_API_KEY?: string;
 			readonly DASHSCOPE_API_KEY?: string;
 			readonly DEEPSEEK_API_KEY?: string;

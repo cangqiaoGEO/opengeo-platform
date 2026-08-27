@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as AuthedDraftsRouteImport } from './routes/_authed/drafts'
 import { Route as AuthedFactsRouteImport } from './routes/_authed/facts'
+import { Route as AuthedSettingsRouteImport } from './routes/_authed/settings'
 import { Route as AuthedTasksRouteImport } from './routes/_authed/tasks'
 import { Route as AuthedTemplatesRouteImport } from './routes/_authed/templates'
 
@@ -35,6 +36,11 @@ const AuthedFactsRoute = AuthedFactsRouteImport.update({
   path: '/facts',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedSettingsRoute = AuthedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedTasksRoute = AuthedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -50,6 +56,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/drafts': typeof AuthedDraftsRoute
   '/facts': typeof AuthedFactsRoute
+  '/settings': typeof AuthedSettingsRoute
   '/tasks': typeof AuthedTasksRoute
   '/templates': typeof AuthedTemplatesRoute
 }
@@ -57,6 +64,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/drafts': typeof AuthedDraftsRoute
   '/facts': typeof AuthedFactsRoute
+  '/settings': typeof AuthedSettingsRoute
   '/tasks': typeof AuthedTasksRoute
   '/templates': typeof AuthedTemplatesRoute
 }
@@ -66,20 +74,22 @@ export interface FileRoutesById {
   '/_authed': typeof AuthedRouteWithChildren
   '/_authed/drafts': typeof AuthedDraftsRoute
   '/_authed/facts': typeof AuthedFactsRoute
+  '/_authed/settings': typeof AuthedSettingsRoute
   '/_authed/tasks': typeof AuthedTasksRoute
   '/_authed/templates': typeof AuthedTemplatesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/drafts' | '/facts' | '/tasks' | '/templates'
+  fullPaths: '/' | '/drafts' | '/facts' | '/settings' | '/tasks' | '/templates'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/drafts' | '/facts' | '/tasks' | '/templates'
+  to: '/' | '/drafts' | '/facts' | '/settings' | '/tasks' | '/templates'
   id:
     | '__root__'
     | '/'
     | '/_authed'
     | '/_authed/drafts'
     | '/_authed/facts'
+    | '/_authed/settings'
     | '/_authed/tasks'
     | '/_authed/templates'
   fileRoutesById: FileRoutesById
@@ -119,6 +129,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedFactsRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/settings': {
+      id: '/_authed/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthedSettingsRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/tasks': {
       id: '/_authed/tasks'
       path: '/tasks'
@@ -139,6 +156,7 @@ declare module '@tanstack/react-router' {
 interface AuthedRouteChildren {
   AuthedDraftsRoute: typeof AuthedDraftsRoute
   AuthedFactsRoute: typeof AuthedFactsRoute
+  AuthedSettingsRoute: typeof AuthedSettingsRoute
   AuthedTasksRoute: typeof AuthedTasksRoute
   AuthedTemplatesRoute: typeof AuthedTemplatesRoute
 }
@@ -146,6 +164,7 @@ interface AuthedRouteChildren {
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedDraftsRoute: AuthedDraftsRoute,
   AuthedFactsRoute: AuthedFactsRoute,
+  AuthedSettingsRoute: AuthedSettingsRoute,
   AuthedTasksRoute: AuthedTasksRoute,
   AuthedTemplatesRoute: AuthedTemplatesRoute,
 }

@@ -15,6 +15,7 @@ export const API_PROVIDER_MAX_OUTPUT_TOKENS: Record<string, number> = {
 	"openai-api": 8000,
 	openrouter: 8000,
 	"mistral-api": 8000,
+	bailian: 8000,
 };
 
 /**

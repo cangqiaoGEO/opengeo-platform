@@ -203,6 +203,19 @@ export const ENV_REGISTRY: EnvVarSpec[] = [
 		description: "OpenRouter API key.",
 	},
 	{
+		name: "BAILIAN_API_KEY",
+		scope: "server",
+		requiredBy: "dynamic-scrape-targets",
+		provider: "bailian",
+		description: "Aliyun Bailian API key (Qwen / DeepSeek / GLM via the OpenAI-compatible surface).",
+	},
+	{
+		name: "BAILIAN_BASE_URL",
+		scope: "server",
+		requiredBy: "optional",
+		description: "Override the Bailian OpenAI-compatible base URL; defaults to the Token Plan endpoint.",
+	},
+	{
 		name: "ARK_API_KEY",
 		scope: "server",
 		requiredBy: "dynamic-scrape-targets",

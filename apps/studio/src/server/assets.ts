@@ -14,7 +14,8 @@ export const listAssets = createServerFn({ method: "GET" })
 			brandId: z.string(),
 			kind: z.enum(["image", "video", "text"]).default("image"),
 			category: z.string().optional(),
-			limit: z.number().int().min(1).max(200).default(60),
+			page: z.number().int().min(1).default(1),
+			pageSize: z.number().int().min(1).max(200).default(60),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -25,7 +26,17 @@ export const listAssets = createServerFn({ method: "GET" })
 			? and(eq(assets.brandId, data.brandId), eq(assets.kind, data.kind), eq(assets.category, data.category))
 			: and(eq(assets.brandId, data.brandId), eq(assets.kind, data.kind));
 
-		const rows = await db.select().from(assets).where(where).orderBy(desc(assets.createdAt)).limit(data.limit);
+		const rows = await db
+			.select()
+			.from(assets)
+			.where(where)
+			.orderBy(desc(assets.createdAt))
+			.limit(data.pageSize)
+			.offset((data.page - 1) * data.pageSize);
+
+		// The count is for the filter in view, not the whole library: "60 of 888"
+		// is only useful if 888 is the number of things this filter matches.
+		const [filtered] = await db.select({ value: count() }).from(assets).where(where);
 
 		const facets = await db
 			.select({ kind: assets.kind, category: assets.category, value: count() })
@@ -43,7 +54,14 @@ export const listAssets = createServerFn({ method: "GET" })
 			.from(assets)
 			.where(eq(assets.brandId, data.brandId));
 
-		return { rows, facets, totals };
+		return {
+			rows,
+			facets,
+			totals,
+			page: data.page,
+			pageSize: data.pageSize,
+			matching: filtered?.value ?? 0,
+		};
 	});
 
 export const updateAssetAlt = createServerFn({ method: "POST" })

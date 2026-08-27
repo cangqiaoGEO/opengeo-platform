@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useMatchRoute } from "@tanstack/react-router";
 import { cn } from "@workspace/ui/lib/utils";
-import { FileText, Images, Layers, ListChecks, ShieldAlert, SlidersHorizontal, Wand2 } from "lucide-react";
+import { FileText, Images, Layers, ListChecks, Send, ShieldAlert, SlidersHorizontal, Wand2 } from "lucide-react";
 import { getGuardrails } from "@/server/guardrails";
 import { getWorkspace } from "@/server/tenant";
 
@@ -38,6 +38,7 @@ const NAV = [
 	{ to: "/templates" as const, label: "指令模板", icon: FileText, ready: true },
 	{ to: "/tasks" as const, label: "创作任务", icon: Wand2, ready: true },
 	{ to: "/drafts" as const, label: "草稿与审核", icon: ListChecks, ready: true },
+	{ to: "/publish" as const, label: "分发与回收", icon: Send, ready: true },
 	{ to: "/settings" as const, label: "护栏设置", icon: SlidersHorizontal, ready: true },
 ];
 
@@ -47,12 +48,12 @@ function StudioShell() {
 
 	return (
 		<div className="flex min-h-screen">
-			<aside className="bg-sidebar text-sidebar-foreground flex w-56 shrink-0 flex-col border-r">
+			<aside className="bg-sidebar text-sidebar-foreground sticky top-0 flex h-screen w-56 shrink-0 flex-col border-r">
 				<div className="px-5 py-6">
 					<p className="text-muted-foreground font-mono text-[10px] tracking-widest uppercase">OpenGEO</p>
 					<p className="mt-1 text-lg font-semibold tracking-tight">Studio</p>
 				</div>
-				<nav className="flex-1 space-y-1 px-3">
+				<nav className="flex-1 space-y-1 overflow-y-auto px-3">
 					{NAV.map((item) => {
 						const Icon = item.icon;
 						if (!item.ready) {

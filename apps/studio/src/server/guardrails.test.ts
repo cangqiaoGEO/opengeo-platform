@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULTS, isRelaxed } from "./guardrails";
+import { DEFAULTS, isRelaxed } from "@/shared/guardrail-state";
 
 describe("relaxed-state banner", () => {
 	it("says nothing while every guardrail is at its safe value", () => {

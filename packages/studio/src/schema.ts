@@ -196,6 +196,12 @@ export const assets = pgTable(
 		/** The page this came from — an asset without a provenance is one nobody
 		 *  can re-check when the site changes. */
 		sourceUrl: text("source_url"),
+		/** Path under the media directory once the file has been mirrored. Images
+		 *  stay remote — publishing references them anyway — but a video has to be
+		 *  uploaded as a file to every channel that matters, so a link alone is
+		 *  not a usable asset. Null for anything still only referenced. */
+		localPath: text("local_path"),
+		sizeBytes: integer("size_bytes"),
 		/** Who may use this and under what terms — the risk an export brand
 		 *  actually carries when a factory photo turns out to be a supplier's. */
 		licenseSource: text("license_source"),
@@ -265,6 +271,10 @@ export const contentDrafts = pgTable(
 		unsupportedClaims: text("unsupported_claims").array().notNull().default([]),
 		/** Ad-law terms found in the body, whether or not the org blocks on them. */
 		flaggedTerms: text("flagged_terms").array().notNull().default([]),
+		/** Why this draft is held, when it is. Kept as reasons rather than folded
+		 *  into the status because "待补事实" and "写错语言" need different work from
+		 *  different people, and a single status cannot say which. */
+		blockReasons: text("block_reasons").array().notNull().default([]),
 		modelVersion: text("model_version"),
 		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 		updatedAt: timestamp("updated_at", { withTimezone: true })
@@ -308,4 +318,57 @@ export const reviewActions = pgTable(
 		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 	},
 	(table) => [index("studio_review_actions_draft_idx").on(table.draftId, table.createdAt)],
+);
+
+/**
+ * Where a piece can go. `export` needs no credentials and works everywhere,
+ * which is why it is the channel a deployment starts with; the others exist
+ * once someone has connected an account that has an official API. Channels
+ * without one are deliberately absent — see the D2 decision in the plan.
+ */
+export const publishChannelEnum = pgEnum("studio_publish_channel", ["export", "website", "wechat_draft"]);
+
+export const publishTargets = pgTable(
+	"studio_publish_targets",
+	{
+		id: uuid("id").defaultRandom().primaryKey().notNull(),
+		organizationId: text("organization_id").notNull(),
+		brandId: text("brand_id").notNull(),
+		channel: publishChannelEnum("channel").notNull(),
+		name: text("name").notNull(),
+		/** Non-secret channel settings. Credentials belong in the platform's
+		 *  encrypted secrets store, never here. */
+		config: jsonb("config").$type<Record<string, string>>().default({}).notNull(),
+		enabled: boolean("enabled").default(true).notNull(),
+		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+	},
+	(table) => [index("studio_publish_targets_brand_idx").on(table.brandId, table.channel)],
+);
+
+/**
+ * One row per thing that actually left the building. `url` is what makes the
+ * loop closeable: the tracking side already stores every URL an engine cited,
+ * so a published page can be checked against real answers instead of assumed
+ * to have worked.
+ */
+export const publishRecords = pgTable(
+	"studio_publish_records",
+	{
+		id: uuid("id").defaultRandom().primaryKey().notNull(),
+		draftId: uuid("draft_id")
+			.references(() => contentDrafts.id, { onDelete: "cascade" })
+			.notNull(),
+		brandId: text("brand_id").notNull(),
+		channel: publishChannelEnum("channel").notNull(),
+		/** Null while a package has been exported but nobody has said where it
+		 *  landed — an honest state, and the one the list nags about. */
+		url: text("url"),
+		note: text("note"),
+		publishedBy: text("published_by").notNull(),
+		publishedAt: timestamp("published_at", { withTimezone: true }).defaultNow().notNull(),
+	},
+	(table) => [
+		index("studio_publish_records_brand_idx").on(table.brandId, table.publishedAt),
+		index("studio_publish_records_draft_idx").on(table.draftId),
+	],
 );

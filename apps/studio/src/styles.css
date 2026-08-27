@@ -5,6 +5,8 @@
 */
 @import "tailwindcss" source(none);
 
+@plugin "@tailwindcss/typography";
+
 /* Explicit @source scanning only. source(none) on the import above disables
    @tailwindcss/vite's module-graph-based class detection, which yields
    different CSS between the client and SSR Vite builds (so the SSR-rendered
@@ -179,4 +181,33 @@
 		print-color-adjust: exact !important;
 		color-adjust: exact !important;
 	}
+}
+
+/* Draft reading view. The typography plugin sizes prose; these rules handle what
+   it cannot know about: images arriving at wildly different intrinsic sizes, the
+   caption line under each one, and citation markers that should read as
+   footnotes rather than interrupt the sentence. */
+.prose-draft :where(img) {
+	margin-inline: auto;
+	max-height: 26rem;
+	width: auto;
+	border-radius: var(--radius);
+	border: 1px solid var(--border);
+}
+
+.prose-draft :where(img + em),
+.prose-draft :where(p > em:only-child) {
+	display: block;
+	margin-top: -0.75rem;
+	text-align: center;
+	font-size: 0.8125rem;
+	font-style: normal;
+	color: var(--muted-foreground);
+}
+
+.prose-draft :where(sup.citation) {
+	margin-inline-start: 0.15em;
+	font-size: 0.7em;
+	font-weight: 500;
+	color: var(--primary);
 }

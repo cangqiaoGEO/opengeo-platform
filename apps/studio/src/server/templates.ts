@@ -4,7 +4,7 @@ import { instructionTemplates } from "@workspace/studio/schema";
 import { and, asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { DEFAULT_ARTICLE_INSTRUCTION, DEFAULT_TITLE_INSTRUCTION } from "./default-instructions";
-import { requireBrand, requireSession } from "./tenant";
+import { requireBrand, requireSession } from "./guards";
 
 /**
  * Title and article instructions are separate records on purpose. A batch

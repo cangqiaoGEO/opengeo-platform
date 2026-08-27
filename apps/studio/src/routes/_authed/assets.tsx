@@ -11,6 +11,7 @@ export const Route = createFileRoute("/_authed/assets")({
 		brand: typeof search.brand === "string" ? search.brand : undefined,
 		kind: search.kind === "video" || search.kind === "text" ? (search.kind as "video" | "text") : ("image" as const),
 		category: typeof search.category === "string" ? search.category : undefined,
+		page: typeof search.page === "number" && search.page > 0 ? search.page : 1,
 	}),
 	loaderDeps: ({ search }) => search,
 	loader: async ({ context, deps }) => {
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/_authed/assets")({
 			brandId,
 			kind: deps.kind,
 			category: deps.category,
-			...(await listAssets({ data: { brandId, kind: deps.kind, category: deps.category } })),
+			...(await listAssets({ data: { brandId, kind: deps.kind, category: deps.category, page: deps.page } })),
 		};
 	},
 	component: AssetsPage,
@@ -33,7 +34,10 @@ function AssetsPage() {
 	const router = useRouter();
 
 	if (!data) return <p className="p-8 text-sm">先在监测平台建一个品牌。</p>;
-	const { rows, facets, totals, kind, category } = data;
+	const { rows, facets, totals, kind, category, page, pageSize, matching } = data;
+	const lastPage = Math.max(1, Math.ceil(matching / pageSize));
+	const first = matching === 0 ? 0 : (page - 1) * pageSize + 1;
+	const last = Math.min(page * pageSize, matching);
 	const categories = facets.filter((f) => f.kind === kind).sort((a, b) => b.value - a.value);
 
 	return (
@@ -57,7 +61,7 @@ function AssetsPage() {
 						key={k}
 						size="sm"
 						variant={kind === k ? "default" : "ghost"}
-						onClick={() => navigate({ search: (s) => ({ ...s, kind: k, category: undefined }) })}
+						onClick={() => navigate({ search: (s) => ({ ...s, kind: k, category: undefined, page: 1 }) })}
 					>
 						{k === "image" ? "图片" : k === "video" ? "视频" : "文案"}
 					</Button>
@@ -66,7 +70,7 @@ function AssetsPage() {
 				<Button
 					size="sm"
 					variant={!category ? "secondary" : "ghost"}
-					onClick={() => navigate({ search: (s) => ({ ...s, category: undefined }) })}
+					onClick={() => navigate({ search: (s) => ({ ...s, category: undefined, page: 1 }) })}
 				>
 					全部
 				</Button>
@@ -75,7 +79,7 @@ function AssetsPage() {
 						key={c.category}
 						size="sm"
 						variant={category === c.category ? "secondary" : "ghost"}
-						onClick={() => navigate({ search: (s) => ({ ...s, category: c.category }) })}
+						onClick={() => navigate({ search: (s) => ({ ...s, category: c.category, page: 1 }) })}
 					>
 						{c.category} <span className="text-muted-foreground ml-1">{c.value}</span>
 					</Button>
@@ -109,22 +113,48 @@ function AssetsPage() {
 					))}
 				</div>
 			) : kind === "video" ? (
-				<div className="divide-y rounded-lg border">
-					{rows.map((a) => (
-						<div key={a.id} className="flex items-center justify-between gap-4 p-4">
-							<div className="min-w-0">
-								<a
-									className="text-sm break-all underline underline-offset-2"
-									href={a.fileUrl ?? "#"}
-									target="_blank"
-									rel="noreferrer"
-								>
-									{a.fileUrl}
-								</a>
-								<p className="text-muted-foreground mt-1 text-xs">{a.category}</p>
+				<div className="space-y-3">
+					{rows.map((a) => {
+						const embedded = /youtube|youtu\.be|vimeo|bilibili/i.test(a.fileUrl ?? "");
+						return (
+							<div key={a.id} className="rounded-lg border p-4">
+								<div className="flex items-start justify-between gap-4">
+									<div className="min-w-0">
+										<a
+											className="text-sm break-all underline underline-offset-2"
+											href={a.fileUrl ?? "#"}
+											target="_blank"
+											rel="noreferrer"
+										>
+											{a.fileUrl}
+										</a>
+										<p className="text-muted-foreground mt-1 text-xs">{a.category}</p>
+									</div>
+									{a.localPath ? (
+										<Badge>已存本地 · {((a.sizeBytes ?? 0) / 1024 / 1024).toFixed(1)} MB</Badge>
+									) : embedded ? (
+										<Badge variant="secondary">需向客户索取原片</Badge>
+									) : (
+										<Badge variant="outline">仅引用</Badge>
+									)}
+								</div>
+								{a.localPath && (
+									// biome-ignore lint/a11y/useMediaCaption: 客户原片，字幕由客户提供
+									<video
+										className="mt-3 w-full max-w-md rounded-md"
+										controls
+										preload="metadata"
+										src={`/media/${a.localPath}`}
+									/>
+								)}
+								{!a.localPath && embedded && (
+									<p className="text-muted-foreground mt-2 text-xs">
+										平台嵌入的播放页不抓取——那既违反对方条款，拿到的也是转码版。发到公众号或视频号需要原始文件，向客户索取。
+									</p>
+								)}
 							</div>
-						</div>
-					))}
+						);
+					})}
 				</div>
 			) : (
 				<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -132,6 +162,34 @@ function AssetsPage() {
 						<ImageCard key={a.id} asset={a} onChange={() => router.invalidate()} />
 					))}
 				</div>
+			)}
+			{matching > pageSize && (
+				<nav className="mt-6 flex items-center justify-between border-t pt-4 text-sm">
+					<span className="text-muted-foreground font-mono text-xs">
+						第 {first}–{last} 张，共 {matching}
+					</span>
+					<div className="flex items-center gap-2">
+						<Button
+							size="sm"
+							variant="ghost"
+							disabled={page <= 1}
+							onClick={() => navigate({ search: (s) => ({ ...s, page: page - 1 }) })}
+						>
+							上一页
+						</Button>
+						<span className="text-muted-foreground font-mono text-xs">
+							{page} / {lastPage}
+						</span>
+						<Button
+							size="sm"
+							variant="ghost"
+							disabled={page >= lastPage}
+							onClick={() => navigate({ search: (s) => ({ ...s, page: page + 1 }) })}
+						>
+							下一页
+						</Button>
+					</div>
+				</nav>
 			)}
 		</div>
 	);

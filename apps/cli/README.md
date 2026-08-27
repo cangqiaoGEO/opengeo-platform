@@ -1,89 +1,75 @@
 <p align="center">
-  <a href="https://github.com/elmohq/elmo">
-    <img src="https://raw.githubusercontent.com/elmohq/elmo/main/apps/www/public/brand/logos/elmo-logo-xl.png" alt="Elmo" width="300">
-  </a>
+  <img src="https://raw.githubusercontent.com/cangqiaoGEO/opengeo-platform/main/apps/web/public/icons/opengeo-icon-512.png" alt="OpenGEO" width="120">
 </p>
 
 <p align="center">
-  The official CLI for <a href="https://www.elmohq.com/">Elmo</a> — open source AI visibility tracking and optimization.
-  <br />
-  <br />
-  <a href="https://www.elmohq.com/docs"><strong>Read the docs »</strong></a>
+  <a href="https://github.com/cangqiaoGEO/opengeo-platform">OpenGEO Platform</a> 的部署 CLI —— 开源的 AI 可见度监测与优化平台
 </p>
 
 <br />
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/@elmohq/cli"><img src="https://img.shields.io/npm/v/@elmohq/cli?color=2563eb&label=npm" alt="npm version"></a>&nbsp;
-  <a href="https://www.elmohq.com/docs"><img src="https://img.shields.io/badge/Docs-2563eb?style=flat&logo=readthedocs&logoColor=white" alt="Docs"></a>&nbsp;
-  <a href="https://demo.elmohq.com"><img src="https://img.shields.io/badge/Demo-22c55e?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xNSAxNGMuMi0xIC43LTEuNyAxLjUtMi41IDEtLjkgMS41LTIuMiAxLjUtMy41QTYgNiAwIDAgMCA2IDhjMCAxIC4yIDIuMiAxLjUgMy41LjcuNyAxLjMgMS41IDEuNSAyLjUiLz48cGF0aCBkPSJNOSAxOGg2Ii8+PHBhdGggZD0iTTEwIDIyaDQiLz48L3N2Zz4%3D" alt="Demo"></a>&nbsp;
-  <a href="https://github.com/elmohq/elmo"><img src="https://img.shields.io/github/stars/elmohq/elmo?style=flat&logo=github&color=ee964b&label=Star" alt="GitHub stars"></a>&nbsp;
-  <a href="https://discord.gg/s24nubCtKz"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white" alt="Discord"></a>
-</p>
+## 这是什么
 
-<br />
+[OpenGEO Platform](https://github.com/cangqiaoGEO/opengeo-platform) 追踪 AI 答案引擎——ChatGPT、Perplexity、Gemini、Copilot、Google AI 模式与 AI 概览，以及国内的豆包、通义千问、DeepSeek、腾讯元宝——如何提及、引用和描述你的品牌。定义客户会问的问题，按周期在各引擎上跑，得到提及率、引用来源与竞对份额的长期趋势。
 
-## What is Elmo?
+这个 CLI 是在自己的机器上把它跑起来的最快方式：生成 Docker Compose 栈、管理密钥与配置，并用一条命令启停与运维实例。
 
-[Elmo](https://www.elmohq.com/) is an open source platform for tracking and optimizing how your brand shows up in AI assistants like ChatGPT, Claude, Gemini, and Perplexity. Define the prompts your customers ask, run them across providers on a schedule, and get visibility into mentions, sentiment, citations, and competitor positioning over time.
-
-`@elmohq/cli` is the fastest way to run Elmo on your own infrastructure. It generates a Docker Compose stack, manages secrets and configuration, and gives you a single command to start, stop, and operate your instance.
-
-## Installation
+## 安装
 
 ```bash
 npm install -g @elmohq/cli
 ```
 
-Requires [Docker](https://docs.docker.com/get-docker/) and Docker Compose.
+需要 [Docker](https://docs.docker.com/get-docker/) 与 Docker Compose。
 
-## Quick Start
+> 包名仍是上游的 `@elmohq/cli`——这个分叉尚未发布自己的 npm 包。从源码运行见仓库根目录的 README。
+
+## 快速开始
 
 ```bash
-# 1. Walk through the interactive setup wizard
+# 1. 交互式配置向导
 elmo init
 
-# 2. Start the stack
+# 2. 起栈
 elmo compose up -d
 
-# 3. Open the app at http://localhost:1515
+# 3. 打开 http://localhost:1515
 ```
 
-`elmo init` will prompt you for a few things (database, AI provider credentials), generate `elmo.yaml` and `.env`, and optionally start the stack for you.
+`elmo init` 会问几个问题（数据库、引擎凭证），生成配置与 `.env`，并可选择直接把栈拉起来。
 
-For the full self-hosting walkthrough, see the [Elmo docs](https://www.elmohq.com/docs).
+配置中文引擎需要对应凭证：豆包 `ARK_API_KEY`、通义千问 `DASHSCOPE_API_KEY`、DeepSeek `DEEPSEEK_API_KEY`、腾讯元宝 `TENCENT_TOKENHUB_API_KEY`；阿里云百炼（一个 key 覆盖 Qwen / DeepSeek / GLM）用 `BAILIAN_API_KEY`。国际消费者界面采集二选一：Cloro 或 BrightData。
 
-## Commands
+## 命令
 
-| Command | Description |
+| 命令 | 说明 |
 | --- | --- |
-| `elmo init` | Interactive wizard to set up a local Elmo instance |
-| `elmo compose <args...>` | Run any `docker compose` command against your Elmo project (e.g. `elmo compose up -d`, `elmo compose down`, `elmo compose logs -f`, `elmo compose build`, `elmo compose ps`) |
-| `elmo edit <env\|compose>` | Change API keys, scrape targets, or the Docker Compose YAML |
-| `elmo upgrade` | Move your deployment to this CLI's version — runs migrations, re-pins image tags, and restarts the stack |
+| `elmo init` | 交互式向导，配置一个本地实例 |
+| `elmo compose <args...>` | 对你的项目执行任意 `docker compose` 命令（`up -d`、`down`、`logs -f`、`build`、`ps`） |
+| `elmo edit <env\|compose>` | 修改 API key、采集目标或 Compose YAML |
+| `elmo upgrade` | 升级到当前 CLI 版本 —— 跑迁移、重新固定镜像 tag、重启栈 |
 
-Run `elmo --help` or `elmo <command> --help` for the full list of flags.
+`elmo --help` 或 `elmo <command> --help` 查看完整参数。
 
-### Useful flags
+### 常用参数
 
-- `--dir <path>` — point any command at a specific config directory (defaults to `~/.elmo`).
-- `elmo init --dev` — build images from a local checkout of the repo instead of pulling from the registry.
+- `--dir <path>` —— 指定配置目录（默认 `~/.elmo`）
+- `elmo init --dev` —— 从本地 checkout 构建镜像，而不是拉取仓库镜像
 
-## Telemetry
+## 遥测
 
-The CLI sends anonymous install and command events so we can understand which flows people use and where setup breaks. To opt out, either export `DISABLE_TELEMETRY=1` in your shell, or add it to your `.env`:
+CLI 会发送匿名的安装与命令事件。关掉它：在 shell 里 `export DISABLE_TELEMETRY=1`，或写进 `.env`：
 
 ```bash
-elmo edit env       # add DISABLE_TELEMETRY=1
-elmo compose up -d  # restart so the deployment picks it up
+elmo edit env       # 加一行 DISABLE_TELEMETRY=1
+elmo compose up -d  # 重启使其生效
 ```
 
-See [the telemetry docs](https://www.elmohq.com/docs/developer-guide/telemetry) for details on what is collected.
+## 参与
 
-## Star, contribute, and chat
+- ⭐ [给仓库点个 Star](https://github.com/cangqiaoGEO/opengeo-platform)
+- 🐛 [提 issue](https://github.com/cangqiaoGEO/opengeo-platform/issues)
 
-Elmo is built in the open and we'd love your help.
+## 关于上游
 
-- ⭐ **[Star us on GitHub](https://github.com/elmohq/elmo)** — it genuinely helps more people find the project.
-- 💬 **[Join the Discord](https://discord.gg/s24nubCtKz)** — get help, share what you're building, and talk to the team.
-- 🐛 **[File an issue](https://github.com/elmohq/elmo/issues)** if something breaks or you have a feature request.
+本仓库是 [elmohq/elmo](https://github.com/elmohq/elmo)（MIT, Copyright © 2026 Blue Whale Software, LLC）的分叉。CLI 的命令与配置格式沿用上游，上游版权声明完整保留。

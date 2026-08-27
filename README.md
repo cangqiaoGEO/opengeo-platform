@@ -1,176 +1,156 @@
-> **OpenGEO Platform** — this is a [fork of elmo](https://github.com/elmohq/elmo) (MIT) maintained by the
-> [OpenGEO](https://github.com/cangqiaoGEO) community as its product layer, adding Chinese answer engines
-> (Doubao, Qwen, DeepSeek, Tencent Yuanbao) as first-class citizens alongside the international ones.
-> Fork rationale, divergence plan, and Chinese-engine setup: [OPENGEO.md](OPENGEO.md).
+<p align="center">
+  <img src="apps/web/public/icons/opengeo-icon-512.png" alt="OpenGEO" width="120">
+</p>
+
+<h1 align="center">OpenGEO Platform</h1>
 
 <p align="center">
-  <a href="https://github.com/elmohq/elmo">
-    <img src="apps/www/public/brand/logos/elmo-logo-xl.png" alt="Elmo" width="300">
-  </a>
+  开源的 AI 可见度监测与优化平台 · 中外答案引擎同列一等公民
+  <br />
+  Open-source AI visibility tracking and optimization, with Chinese answer engines as first-class citizens.
 </p>
 
 <p align="center">
-  Open source AI visibility tracking and optimization.
-  <br />
-  <br />
-  <a href="https://www.elmohq.com/"><strong>Learn more »</strong></a>
+  <a href="https://github.com/cangqiaoGEO"><img src="https://img.shields.io/badge/OpenGEO-0E6B5B?style=flat&logoColor=white" alt="OpenGEO"></a>&nbsp;
+  <a href="LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-blue?style=flat" alt="MIT"></a>&nbsp;
+  <a href="https://github.com/cangqiaoGEO/opengeo-platform/issues"><img src="https://img.shields.io/badge/Issues-f95738?style=flat&logo=github&logoColor=white" alt="Issues"></a>
 </p>
 
 <br />
 
-<p align="center">
-  <a href="https://www.elmohq.com/docs"><img src="https://img.shields.io/badge/Docs-2563eb?style=flat&logo=readthedocs&logoColor=white" alt="Docs"></a>&nbsp;
-  <a href="https://demo.elmohq.com"><img src="https://img.shields.io/badge/Demo-22c55e?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xNSAxNGMuMi0xIC43LTEuNyAxLjUtMi41IDEtLjkgMS41LTIuMiAxLjUtMy41QTYgNiAwIDAgMCA2IDhjMCAxIC4yIDIuMiAxLjUgMy41LjcuNyAxLjMgMS41IDEuNSAyLjUiLz48cGF0aCBkPSJNOSAxOGg2Ii8+PHBhdGggZD0iTTEwIDIyaDQiLz48L3N2Zz4%3D" alt="Demo"></a>&nbsp;
-  <a href="https://github.com/elmohq/elmo/issues"><img src="https://img.shields.io/badge/Issues-f95738?style=flat&logo=github&logoColor=white" alt="Issues"></a>&nbsp;
-  <a href="https://github.com/orgs/elmohq/projects/3/views/1"><img src="https://img.shields.io/badge/Roadmap-ee964b?style=flat&logo=github&logoColor=white" alt="Roadmap"></a>&nbsp;
-  <a href="https://discord.gg/s24nubCtKz"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white" alt="Discord"></a>
-</p>
+## 这是什么
 
-<br />
+OpenGEO Platform 追踪 AI 答案引擎——ChatGPT、Perplexity、Gemini、Copilot、Google AI 模式与 AI 概览，以及国内的豆包、通义千问、DeepSeek、腾讯元宝——如何提及、引用和描述你的品牌，让你能对标竞对并把可见度做上去。
 
-## About
+这件事在不同语境下有不同叫法：答案引擎优化（AEO）、生成式引擎优化（GEO）、大模型优化（LLMO）。
 
-Elmo is an open-source, self-hosted platform for optimizing your AI visibility, which is also known as:
-* Answer Engine Optimization (AEO)
-* Generative Engine Optimization (GEO)
-* LLM Optimization (LLMO, which is where the name Elmo is from)
+它同时是两件东西：
 
-Elmo tracks how AI answer engines like ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews mention, cite, and describe your brand, so you can benchmark competitors and grow your visibility in AI answers.
+- **监测台**（`apps/web`）：按周期跑追踪问题、记录每一次真实问答、算可见度与竞对份额、拆解引用来源
+- **内容工作台 OpenGEO Studio**（`apps/studio`）：依据监测结果生产内容——品牌事实库、素材库、指令模板、生成、审核、分发，并把发布出去的 URL 回传给监测侧验证是否真被引擎读到
 
-It's a free alternative to tools like [Profound](https://www.elmohq.com/ai-visibility-tools/profound), [Peec](https://www.elmohq.com/ai-visibility-tools/peec-ai), and [Otterly](https://www.elmohq.com/ai-visibility-tools/otterly-ai). You can run it on your own infrastructure, own your data, and audit exactly how every metric is calculated.
+监测回答"我现在在哪"，Studio 回答"那接下来写什么"。两者共用一套登录、一个数据库、一套组件库。
 
-## Demo
+## 与上游的关系
 
-Try the live demo at **[demo.elmohq.com](https://demo.elmohq.com)** to see how Elmo tracks prompts and analyzes citations.
+本仓库是 [elmohq/elmo](https://github.com/elmohq/elmo)（MIT, Copyright © 2026 Blue Whale Software, LLC）的分叉，采用 **fork-and-diverge** 策略：锁定分叉点自主演进，不承诺跟随上游功能，`upstream` remote 保留用于按需 cherry-pick 修复。上游 LICENSE 与版权声明按 MIT 要求完整保留。
 
-## Screenshots
+分叉后新增的部分记录在 [OPENGEO.md](OPENGEO.md)。
 
-| Dashboard overview | Visibility tracking |
-|---|---|
-| ![Elmo dashboard showing visibility score, tracked prompts, and trend charts](apps/www/public/screenshots/overview.png) | ![Per-prompt AI visibility scores and trends across answer engines](apps/www/public/screenshots/visibility.png) |
-| **Share of voice** | **Citation analysis** |
-| ![Competitor share of voice leaderboard and trend over time](apps/www/public/screenshots/share-of-voice.png) | ![Domains and URLs cited by AI answer engines, grouped by category](apps/www/public/screenshots/citations.png) |
-| **Query fan-out** | **Opportunities** |
-| ![Web searches AI engines ran while grounding answers to tracked prompts](apps/www/public/screenshots/query-fan-out.png) | ![Generated recommendations for earning more AI citations](apps/www/public/screenshots/opportunities.png) |
+## 监测台追踪什么
 
-## What Elmo Tracks
+- **可见度评分** —— 每条追踪问题在每个引擎上的品牌提及率，按问题、按引擎、按时间成趋势
+- **品牌提及识别** —— 按品牌名、别名与自有域名统一口径匹配，跨引擎一致
+- **引用来源分析** —— 引擎引用的每一个 URL 连同域名与位置一并存下并归类：自有域、竞对域、社交媒体、Google 属性、机构来源。你能看到 AI 在你这个行业里到底信任哪些页面
+- **竞对份额 SoV** —— `品牌提及数 ÷（品牌提及数 + 竞对提及总数）`，分母为零时不计分而非折算为 0
+- **检索扩散** —— 引擎在生成答案前跑了哪些网页搜索、如何改写你的措辞、哪些检索你赢了哪些没有
+- **问题管理** —— onboarding 分析官网后给出品牌名、别名、竞对与追踪问题建议；也可手工录入、打标签、单独启停
+- **机会点** —— 把可见度与引用数据转成一份会定期刷新的优先级清单
+- **报告** —— 可分享的可见度报告，利益相关方无需账号即可查看
+- **REST API** —— 品牌、问题、竞对的增删改查，以及分析快照与报告的程序化获取
 
-- **Visibility scoring** — For every tracked prompt, Elmo measures how often each AI answer engine mentions your brand and trends the score over time, per prompt and per model.
-- **Brand mention tracking** — Each answer is checked for your brand name, aliases, and domains, so mentions are counted the same way every time, across every engine.
-- **Citation analysis** — Every URL an engine cites is stored with its domain and position, then categorized: your own domains, competitor domains, social media, Google properties, and institutional sources. You see which pages AI models actually trust for your industry.
-- **Competitor benchmarking and share of voice** — A leaderboard of competitor mention rates next to your own, with your overall share of voice and how it moves over time.
-- **Query fan-out analysis** — When an answer engine grounds a response, it often runs several web searches first. Elmo records those searches, shows how engines rewrite your wording (which words they add, drop, or keep), and which searches your content wins or misses.
-- **Prompt management** — An onboarding wizard analyzes your website, then suggests keywords, competitors, buyer personas, and tracking prompts. You can also add prompts manually, tag them, and enable or disable them individually.
-- **Opportunities** — Elmo turns your tracked visibility and citation data into a prioritized, regularly refreshed list of what to create, pitch, and seed to earn more AI citations.
-- **Reports** — Shareable AI visibility reports (visibility summary, per-prompt breakdown, citation analysis, competitor comparison) viewable by stakeholders without an Elmo account.
-- **REST API** — Manage brands, prompts, and competitors and pull analytics snapshots and reports programmatically. See the [API reference](https://www.elmohq.com/docs/api).
+## Studio 生产什么
 
-## How Elmo Measures AI Visibility
+- **品牌事实库** —— 生成内容时唯一的事实来源。每条事实带出处链接与有效期；模型只能引用库里的条目，引用按条目 id 校验而不是靠模型自称
+- **素材库** —— 从官网抓取图片、视频与文案，按来源页分类。图片按链接引用，视频落到本地（各渠道要上传文件而不是贴链接）
+- **指令模板** —— 标题与正文分开存、按序轮换，避免一批稿子读起来是同一篇文章的 N 个说法
+- **创作任务** —— 选中监测里未命中的问题批量生成，边生成边显示引用了几处事实
+- **草稿与审核** —— 无事实支撑的说法会被拦下；通过一篇被拦下的稿子必须写明理由，并记录为越权批准而非普通通过
+- **护栏设置** —— 人工审核、绝对化用语拦截、事实绑定强度均为组织级开关，每次改动记入只增不改的审计表
+- **分发与回收** —— 导出发布包、登记发布地址，并与监测侧真实抓到的引用比对
 
-Elmo's methodology is simple and fully inspectable in this repository:
+## 可见度是怎么算出来的
 
-1. **Prompts are defined per brand** — either generated by the onboarding wizard from your website or written by hand. Each prompt is a question a potential customer might ask an AI assistant.
-2. **A background worker runs each prompt on a schedule** (several times a day by default) against every engine you configure. Scraping providers capture the real consumer surfaces — ChatGPT, Google AI Mode, Google AI Overviews, Gemini, Perplexity, and Microsoft Copilot — while direct model APIs (OpenAI, Anthropic, Mistral, OpenRouter) add coverage for Claude, Grok, and other models with web search enabled. The [providers guide](https://www.elmohq.com/docs/user-guide/providers) compares both approaches and their costs.
-3. **Every answer is normalized and parsed.** Each run produces the answer text, the list of cited URLs, the web searches the engine ran while grounding (its query fan-out), and the model version. The text is scanned for your brand's name, aliases, and domains, and for each competitor's.
-4. **Everything is stored in PostgreSQL**, including the raw engine output, so any metric can be re-derived and audited later. Nothing is a black box: the mention detection, scoring, and aggregation code is all in this repo.
-5. **Metrics are aggregated into trends.** Visibility is the share of runs that mention your brand; share of voice compares your mention rate against competitors; citation counts roll up by URL, domain, and category — each filterable by prompt, tag, engine, and time range.
+方法论在这个仓库里可以逐行读：
 
-Because Elmo is open source, this loop is the part you never have to take on faith. Answer Engine Optimization (AEO) tooling lives or dies on measurement quality, and Elmo's measurements are ones you can read, run, and verify.
+1. **追踪问题按品牌定义** —— 由 onboarding 从官网生成，或手工写。每条都是潜在客户可能问 AI 的问题
+2. **后台 worker 按周期跑每条问题**，覆盖你配置的每个引擎。采集通道拿的是真实消费者界面；模型 API 通道补充覆盖面。两种口径的差别与成本在 `packages/docs` 里讲清楚了
+3. **每次回答都被归一化解析** —— 存下答案正文、被引用的 URL 列表、引擎跑过的检索词、模型版本，并按品牌与各竞对的名称/别名/域名扫描提及
+4. **全部落进 PostgreSQL**，包括引擎原始输出，所以任何指标事后都能重算与复核
+5. **聚合成趋势** —— 可见度是提及运行数占比；SoV 对比你与竞对的提及率；引用按 URL、域名、类别汇总，均可按问题、标签、引擎与时间筛选
 
-## Elmo vs. Closed-Source Alternatives
+开源意味着这一整套循环不需要你选择相信。AEO 工具的价值取决于测量质量，而这里的测量你可以读、可以跑、可以验。
 
-Most AI visibility platforms are closed SaaS. Here is how Elmo compares to the widely used ones:
+## 中文引擎
 
-| Tool | Open source | Self-hostable | Auditable metrics | Data ownership | Pricing model | Engine coverage |
-|---|---|---|---|---|---|---|
-| **Elmo** | Yes (MIT) | Yes (Docker Compose) | Yes — scoring code is public | Yours — your own PostgreSQL | Free self-hosted; cloud from $29/mo | ChatGPT, Google AI Mode, Google AI Overviews, Gemini, Perplexity, Copilot, Claude, Grok, Mistral, and more |
-| [Profound](https://www.elmohq.com/ai-visibility-tools/profound) | No | No | No — proprietary scoring | Vendor-hosted | Enterprise, custom pricing | Multiple engines, plus AI crawler analytics |
-| [Peec AI](https://www.elmohq.com/ai-visibility-tools/peec-ai) | No | No | No | Vendor-hosted | Paid subscription, custom pricing | Multiple engines |
-| [Otterly AI](https://www.elmohq.com/ai-visibility-tools/otterly-ai) | No | No | No | Vendor-hosted | Paid subscription, custom pricing | Multiple engines, plus on-page GEO audits |
-| [Scrunch](https://www.elmohq.com/ai-visibility-tools/scrunch) | No | No | No | Vendor-hosted | Enterprise, custom pricing | Multiple engines; content-optimization focus |
-| [Ahrefs Brand Radar](https://www.elmohq.com/ai-visibility-tools/ahrefs-brand-radar) | No | No | No | Vendor-hosted | From $129/mo | Multiple engines, tied to Ahrefs' SEO dataset |
-| [Semrush AI Toolkit](https://www.elmohq.com/ai-visibility-tools/semrush-ai-toolkit) | No | No | No | Vendor-hosted | From $139.95/mo | Multiple engines, tied to Semrush's SEO platform |
-| [HubSpot AEO Grader](https://www.elmohq.com/ai-visibility-tools/hubspot-aeo-grader) | No | No | No | Vendor-hosted | Free | One-time website audit, not continuous tracking |
+上游只覆盖国际引擎。本分叉把国内四家接成一等公民，走官方 API 通道：
 
-To be fair about where the closed tools are genuinely ahead: Profound, Peec AI, Ahrefs, and Semrush offer prompt volume estimates; Peec AI, Ahrefs, and Semrush include sentiment analysis; Profound, Otterly, and Scrunch analyze AI crawler behavior; Otterly, Scrunch, and HubSpot audit and optimize on-page content; and Ahrefs and Semrush integrate AI tracking with established SEO datasets. Elmo doesn't do those things today — see the [roadmap](https://www.elmohq.com/roadmap) for what's planned. What none of them offer is the ability to read the code behind every number, run it on your own infrastructure, and keep the data.
+| 引擎 | 通道 | 凭证 |
+|---|---|---|
+| 豆包 | 火山方舟 Responses + web_search | `ARK_API_KEY` |
+| 通义千问 | DashScope 强制联网 + 结构化引用 | `DASHSCOPE_API_KEY` |
+| DeepSeek | DeepSeek 官方 API | `DEEPSEEK_API_KEY` |
+| 腾讯元宝 | TokenHub + 联网检索 | `TENCENT_TOKENHUB_API_KEY` |
+| 阿里云百炼 | OpenAI 兼容面，一个 key 覆盖 Qwen / DeepSeek / GLM | `BAILIAN_API_KEY` |
 
-Elmo also maintains a directory of 100+ Answer Engine Optimization and Generative Engine Optimization tools with feature matrices and head-to-head comparisons: [AI Visibility Tool Directory](https://www.elmohq.com/ai-visibility-tools).
+百炼通道额外承担 onboarding 的结构化研究与 Studio 的内容生成——它支持 json_schema 结构化输出，但**不返回引用 URL**，这一点写在 provider 的注释里，citations 返回空数组而不是编造。
 
-## Who Elmo Is For
+## 快速开始
 
-- **Self-hosting teams** who want AI visibility data inside their own infrastructure — your prompts, your competitors, and every raw engine response stay in a PostgreSQL database you control.
-- **Agencies** offering Answer Engine Optimization to clients: the white-label deployment adds custom branding, a custom domain, and SSO on top of multi-brand tracking.
-- **Developers and analysts** who want auditable metrics — a REST API, a documented methodology, and a database you can query directly instead of a dashboard-only black box.
-- **Anyone priced out of enterprise AEO platforms** who still needs credible measurement of how ChatGPT, Perplexity, Gemini, and Google AI Overviews talk about their brand.
-
-## Quick Start
-
-> [!TIP]
-> **Would rather not self-host?** Elmo Cloud runs the same open-source platform for you, with managed hosting and automatic updates, from $29/mo. [Start with Cloud →](https://www.elmohq.com/pricing)
-
-For local deployments, use Docker Compose as configured with the `@elmohq/cli` package:
+需要 Node.js 24、pnpm 与 PostgreSQL。
 
 ```bash
-# Install the CLI globally
-npm install -g @elmohq/cli
+pnpm install
 
-# Initialize configuration (interactive wizard)
-elmo init
+# 建库并写入配置（两个随机密钥）
+createdb opengeo_platform
+cp .env.example .env && cp .env apps/web/.env
 
-# Start the stack
-elmo compose up -d
+# 执行迁移
+(cd packages/lib && pnpm exec drizzle-kit migrate)
+
+# 起服务
+pnpm --filter @workspace/web dev      # 监测台 http://localhost:3000
+pnpm --filter @workspace/worker dev   # 后台任务
+pnpm --filter @workspace/studio-app dev  # Studio http://localhost:3002
 ```
 
-Once the services report healthy, open **http://localhost:1515** and create your account. The full walkthrough is in the [getting started guide](https://www.elmohq.com/docs/getting-started).
+`.env.example` 里 `SCRAPE_TARGETS=stub:stub` 是零成本跑通全流程用的。换真实引擎时按注释块填对应 Key 并替换目标串——中文四引擎走官方 API；国际消费者界面二选一（Cloro 覆盖最全，或 BrightData 按量计费）。
 
-> [!TIP]
-> **Watch** this repo's **releases** to get notified of major updates.
+Docker Compose 部署见 `docker/` 与 `apps/cli`。
 
-## Deployment Options
+## 部署模式
 
-| Option | What you get | Price |
-|---|---|---|
-| **Self-hosted** | The full platform on your own infrastructure via Docker Compose, unlimited prompts, every supported engine and provider | Free (MIT) |
-| **Elmo Cloud** | Managed hosting with automatic updates, unlimited seats, and API access on every plan | From $29/mo |
-| **White-label** | Everything in Cloud plus custom branding, a custom domain, and SSO — built for agencies serving multiple clients | Custom |
+| 模式 | 说明 |
+|---|---|
+| `local` | 单机自托管，全部功能，无计费 |
+| `whitelabel` | 自定义品牌与域名，面向代运营多品牌场景 |
 
-Details and plan limits are on the [pricing page](https://www.elmohq.com/pricing).
+模式由 `DEPLOYMENT_MODE` 决定，各模式开放的能力在 `packages/deployment` 里声明。
 
-## Architecture
+## 架构
 
-<p align="center">
-  <img src="apps/www/public/brand/architecture.svg" alt="Elmo system architecture" width="100%">
-</p>
+监测台服务仪表盘与 REST API，worker 调度并执行问题运行，PostgreSQL 同时承担数据存储与任务队列。Studio 是同仓的第二个应用，共用登录、数据库与组件库，但**只新增文件、不修改上游维护的文件**——这条边界规则与它的 CI 检查写在 [AGENTS.md](AGENTS.md) 里，是这个分叉还能继续 cherry-pick 上游修复的前提。
 
-A web app serves the dashboard and REST API, a worker schedules and executes prompt runs against the AI engines, and PostgreSQL stores both the data and the job queue. The [developer guide](https://www.elmohq.com/docs/developer-guide) covers the monorepo layout and how to contribute.
+```
+apps/web       监测台（TanStack Start）
+apps/studio    内容工作台（TanStack Start）
+apps/worker    pg-boss 后台任务
+apps/www       上游营销站（保留未改）
+apps/cli       Docker Compose 部署 CLI
+packages/lib   共享逻辑与 Drizzle schema
+packages/studio  Studio 自己的 schema 与独立迁移链
+packages/ui    共享组件
+packages/config  环境变量校验与常量
+```
 
-## Tech Stack
+## 技术栈
 
+- [TypeScript](https://www.typescriptlang.org/) · [TanStack Start](https://tanstack.com/start/latest) · [Vite](https://vite.dev/)
+- [PostgreSQL](https://www.postgresql.org/) · [Drizzle ORM](https://orm.drizzle.team/) · [pg-boss](https://github.com/timgit/pg-boss)
+- [Tailwind CSS](https://tailwindcss.com/) · [Base UI](https://base-ui.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [TanStack Start](https://tanstack.com/start/latest)
-- [pg-boss](https://github.com/timgit/pg-boss)
 
-## Documentation
+## 文档
 
-- [Getting started](https://www.elmohq.com/docs/getting-started) — self-host Elmo in under five minutes
-- [User guide](https://www.elmohq.com/docs/user-guide) — brand setup, prompts, visibility, citations, and reports
-- [Providers](https://www.elmohq.com/docs/user-guide/providers) — choosing scrapers and model APIs for each answer engine
-- [Developer guide](https://www.elmohq.com/docs/developer-guide) — architecture, configuration, and contributing
-- [API reference](https://www.elmohq.com/docs/api) — the REST API for brands, prompts, competitors, snapshots, and reports
-- [AI Visibility Tool Directory](https://www.elmohq.com/ai-visibility-tools) — 100+ AEO/GEO tools compared
+- [OPENGEO.md](OPENGEO.md) —— 分叉声明、中文引擎接入与路线图
+- [AGENTS.md](AGENTS.md) —— 仓库约定、Studio 边界规则
+- `packages/docs` —— 用户与开发者文档正文（由 `apps/www` 渲染）
 
-## Contact
+## 相关仓库
 
-- [Discord](https://discord.gg/s24nubCtKz)
-- [Email](mailto:support@elmohq.com)
-- [Schedule a call](https://cal.com/jrhizor/elmo)
+标准与工具层在 [cangqiaoGEO](https://github.com/cangqiaoGEO) 组织：spec / audit / insights / skills / agentready / index 六层。
 
-## License
+## 许可
 
-Elmo is open source under the [MIT License](LICENSE.md).
-
-## Repo Activity
-
-![Repository activity](https://www.elmohq.com/repo-activity.svg "Repository activity")
+MIT，见 [LICENSE.md](LICENSE.md)。上游 elmo 的版权声明完整保留。

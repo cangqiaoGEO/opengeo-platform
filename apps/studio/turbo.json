@@ -1,0 +1,15 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"extends": ["//"],
+	"tasks": {
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": [".output/**", ".nitro/**", ".vinxi/**"],
+			"env": ["DATABASE_URL", "BETTER_AUTH_SECRET", "APP_URL", "STUDIO_APP_URL", "BAILIAN_API_KEY", "BAILIAN_BASE_URL"]
+		}
+	}
+}

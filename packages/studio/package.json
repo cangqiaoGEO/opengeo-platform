@@ -1,0 +1,21 @@
+{
+	"name": "@workspace/studio",
+	"version": "0.0.0",
+	"private": true,
+	"license": "MIT",
+	"type": "module",
+	"exports": {
+		"./schema": "./src/schema.ts"
+	},
+	"scripts": {
+		"check-types": "tsc --noEmit",
+		"lint": "biome lint"
+	},
+	"dependencies": {
+		"drizzle-orm": "^0.45.2"
+	},
+	"devDependencies": {
+		"drizzle-kit": "^0.31.10",
+		"typescript": "^7.0.2"
+	}
+}

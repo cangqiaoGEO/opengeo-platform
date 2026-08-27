@@ -1,0 +1,408 @@
+{
+	"id": "0b507456-bf20-4163-8f0e-e6f8bdfb5715",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.studio_fact_bases": {
+			"name": "studio_fact_bases",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"organization_id": {
+					"name": "organization_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"brand_id": {
+					"name": "brand_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"company_name": {
+					"name": "company_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"short_name": {
+					"name": "short_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"studio_fact_bases_org_idx": {
+					"name": "studio_fact_bases_org_idx",
+					"columns": [
+						{
+							"expression": "organization_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"studio_fact_bases_brand_uidx": {
+					"name": "studio_fact_bases_brand_uidx",
+					"columns": [
+						{
+							"expression": "brand_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.studio_fact_entries": {
+			"name": "studio_fact_entries",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"fact_base_id": {
+					"name": "fact_base_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"field": {
+					"name": "field",
+					"type": "studio_fact_field",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"content": {
+					"name": "content",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"evidence_url": {
+					"name": "evidence_url",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"valid_until": {
+					"name": "valid_until",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"owner_user_id": {
+					"name": "owner_user_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"approved": {
+					"name": "approved",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"studio_fact_entries_base_idx": {
+					"name": "studio_fact_entries_base_idx",
+					"columns": [
+						{
+							"expression": "fact_base_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"studio_fact_entries_base_field_idx": {
+					"name": "studio_fact_entries_base_field_idx",
+					"columns": [
+						{
+							"expression": "fact_base_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "field",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"studio_fact_entries_fact_base_id_studio_fact_bases_id_fk": {
+					"name": "studio_fact_entries_fact_base_id_studio_fact_bases_id_fk",
+					"tableFrom": "studio_fact_entries",
+					"tableTo": "studio_fact_bases",
+					"columnsFrom": ["fact_base_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.studio_guardrail_audit": {
+			"name": "studio_guardrail_audit",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"organization_id": {
+					"name": "organization_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"field": {
+					"name": "field",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"from_value": {
+					"name": "from_value",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"to_value": {
+					"name": "to_value",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"actor_user_id": {
+					"name": "actor_user_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"reason": {
+					"name": "reason",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"studio_guardrail_audit_org_idx": {
+					"name": "studio_guardrail_audit_org_idx",
+					"columns": [
+						{
+							"expression": "organization_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "created_at",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.studio_guardrail_settings": {
+			"name": "studio_guardrail_settings",
+			"schema": "",
+			"columns": {
+				"organization_id": {
+					"name": "organization_id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"require_review": {
+					"name": "require_review",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": true
+				},
+				"block_ad_law_terms": {
+					"name": "block_ad_law_terms",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": true
+				},
+				"fact_binding": {
+					"name": "fact_binding",
+					"type": "studio_fact_binding_mode",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'strict'"
+				},
+				"enable_traffic_clone": {
+					"name": "enable_traffic_clone",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"updated_by": {
+					"name": "updated_by",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {
+		"public.studio_fact_binding_mode": {
+			"name": "studio_fact_binding_mode",
+			"schema": "public",
+			"values": ["strict", "warn", "off"]
+		},
+		"public.studio_fact_field": {
+			"name": "studio_fact_field",
+			"schema": "public",
+			"values": [
+				"product_service",
+				"product_feature",
+				"brand_story",
+				"user_pain",
+				"trust_credential",
+				"customer_case",
+				"capacity",
+				"certification",
+				"lead_time",
+				"pricing_basis",
+				"other"
+			]
+		}
+	},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}

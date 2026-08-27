@@ -44,12 +44,16 @@ OpenGEO Platform 追踪 AI 答案引擎——ChatGPT、Perplexity、Gemini、Cop
 
 **Studio** —— 从事实库到成稿
 
+审核视图是这套东西的核心：正文里的每个角标都对应下方一条事实条目，标着它取自哪个字段、有没有人核准过、证据链接在哪。这一篇被拦在「待补事实」，理由是语言与目标问题不一致——它为一个英文检索问题写了中文。
+
+![草稿审核：每条引用对应一条事实条目，带字段、核准状态与证据链接](docs/screenshots/studio-review.png)
+
 | | |
 |---|---|
 | ![指令模板：标题与正文分开存、按序轮换](docs/screenshots/studio-templates.png) | ![创作任务：选中监测里未命中的问题批量生成](docs/screenshots/studio-tasks.png) |
 | 指令模板：标题与正文分开，生成时轮换 | 创作任务：挑监测里没命中的问题，那才是缺口 |
 | ![草稿：图文并茂，配图来自素材库](docs/screenshots/studio-drafts.png) | |
-| 草稿：配图按 id 从素材库选取，正文引用带脚注 | |
+| 草稿：配图按 id 从素材库选取 | |
 
 ## 与上游的关系
 

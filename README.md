@@ -31,6 +31,26 @@ OpenGEO Platform 追踪 AI 答案引擎——ChatGPT、Perplexity、Gemini、Cop
 
 监测回答"我现在在哪"，Studio 回答"那接下来写什么"。两者共用一套登录、一个数据库、一套组件库。
 
+## 截图
+
+**监测台** —— 可见度、竞对份额、引用来源
+
+| | |
+|---|---|
+| ![总览：AI 可见度、竞对份额与 30 天趋势](docs/screenshots/overview.png) | ![引用来源：引擎引用了哪些域名与页面类型](docs/screenshots/citations.png) |
+| 总览：可见度、SoV、观测次数与覆盖引擎数 | 引用来源：305 个域名、727 条引用，可按引擎与时间筛选 |
+| ![竞对份额排行与趋势](docs/screenshots/share-of-voice.png) | ![事实库：每条事实带出处链接与核准状态](docs/screenshots/studio-facts.png) |
+| 竞对份额：与每个竞对的提及率对比 | Studio 事实库：生成内容唯一的事实来源，每条带出处 |
+
+**Studio** —— 从事实库到成稿
+
+| | |
+|---|---|
+| ![指令模板：标题与正文分开存、按序轮换](docs/screenshots/studio-templates.png) | ![创作任务：选中监测里未命中的问题批量生成](docs/screenshots/studio-tasks.png) |
+| 指令模板：标题与正文分开，生成时轮换 | 创作任务：挑监测里没命中的问题，那才是缺口 |
+| ![草稿：图文并茂，配图来自素材库](docs/screenshots/studio-drafts.png) | |
+| 草稿：配图按 id 从素材库选取，正文引用带脚注 | |
+
 ## 与上游的关系
 
 本仓库是 [elmohq/elmo](https://github.com/elmohq/elmo)（MIT, Copyright © 2026 Blue Whale Software, LLC）的分叉，采用 **fork-and-diverge** 策略：锁定分叉点自主演进，不承诺跟随上游功能，`upstream` remote 保留用于按需 cherry-pick 修复。上游 LICENSE 与版权声明按 MIT 要求完整保留。

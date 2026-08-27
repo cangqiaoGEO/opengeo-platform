@@ -1,10 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Badge } from "@workspace/ui/components/badge";
+import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import { Input } from "@workspace/ui/components/input";
 import { useState } from "react";
+import { getDraft, reviewDraft } from "@/server/review";
 import { listDrafts } from "@/server/tasks";
 
-const STATUS_LABEL: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+const STATUS: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
 	generating: { label: "生成中", variant: "secondary" },
 	needs_facts: { label: "待补事实", variant: "destructive" },
 	pending_review: { label: "待审核", variant: "outline" },
@@ -27,16 +30,39 @@ export const Route = createFileRoute("/_authed/drafts")({
 	component: DraftsPage,
 });
 
+type Detail = Awaited<ReturnType<typeof getDraft>>;
+
 function DraftsPage() {
 	const { drafts } = Route.useLoaderData();
-	const [open, setOpen] = useState<string | null>(null);
+	const router = useRouter();
+	const [detail, setDetail] = useState<Detail | null>(null);
+	const [note, setNote] = useState("");
+	const [error, setError] = useState<string | null>(null);
+
+	async function open(draftId: string) {
+		setError(null);
+		setNote("");
+		setDetail(detail?.draft.id === draftId ? null : await getDraft({ data: { draftId } }));
+	}
+
+	async function decide(draftId: string, action: "approve" | "reject") {
+		setError(null);
+		try {
+			await reviewDraft({ data: { draftId, action, note: note || undefined } });
+			setDetail(null);
+			setNote("");
+			router.invalidate();
+		} catch (e) {
+			setError(e instanceof Error ? e.message : "操作失败");
+		}
+	}
 
 	return (
 		<div className="mx-auto max-w-4xl px-8 py-10">
 			<header className="mb-8">
-				<h1 className="text-2xl font-semibold tracking-tight">草稿</h1>
+				<h1 className="text-2xl font-semibold tracking-tight">草稿与审核</h1>
 				<p className="text-muted-foreground mt-2 max-w-prose text-sm">
-					「待补事实」不是失败，是活儿：模型写了事实库支撑不了的话，那句话要么找到证据补进事实库，要么从正文里去掉。
+					「待补事实」不是失败，是活儿：模型写了事实库支撑不了的话，那句要么找到证据补进事实库，要么从正文里去掉。
 				</p>
 			</header>
 
@@ -45,10 +71,11 @@ function DraftsPage() {
 			) : (
 				<div className="space-y-3">
 					{drafts.map((d) => {
-						const status = STATUS_LABEL[d.status] ?? { label: d.status, variant: "secondary" as const };
+						const status = STATUS[d.status] ?? { label: d.status, variant: "secondary" as const };
+						const isOpen = detail?.draft.id === d.id;
 						return (
 							<Card key={d.id}>
-								<CardHeader className="cursor-pointer" onClick={() => setOpen(open === d.id ? null : d.id)}>
+								<CardHeader className="cursor-pointer" onClick={() => open(d.id)}>
 									<div className="flex items-start justify-between gap-4">
 										<CardTitle className="text-base leading-snug">{d.title}</CardTitle>
 										<Badge variant={status.variant}>{status.label}</Badge>
@@ -63,19 +90,83 @@ function DraftsPage() {
 										)}
 									</div>
 								</CardHeader>
-								{open === d.id && (
-									<CardContent className="space-y-4">
-										{d.unsupportedClaims.length > 0 && (
+
+								{isOpen && detail && (
+									<CardContent className="space-y-5">
+										{detail.draft.unsupportedClaims.length > 0 && (
 											<div className="border-destructive/40 bg-destructive/5 rounded-md border p-3">
 												<p className="text-destructive mb-2 text-xs font-medium">事实库支撑不了这些说法</p>
 												<ul className="list-disc space-y-1 pl-4 text-sm">
-													{d.unsupportedClaims.map((c, i) => (
+													{detail.draft.unsupportedClaims.map((c, i) => (
 														<li key={i}>{c}</li>
 													))}
 												</ul>
 											</div>
 										)}
-										<article className="prose prose-sm max-w-none whitespace-pre-wrap">{d.body}</article>
+
+										{detail.citations.length > 0 && (
+											<div>
+												<p className="text-muted-foreground mb-2 font-mono text-xs tracking-widest uppercase">
+													引用了 {detail.citations.length} 条事实
+												</p>
+												<div className="divide-y rounded-md border text-sm">
+													{detail.citations.map((c, i) => (
+														<div key={i} className="p-3">
+															<p>{c.claim}</p>
+															<p className="text-muted-foreground mt-1 text-xs">
+																← [{c.entryField}] {c.entryContent}
+																{!c.approved && <span className="text-amber-600"> · 该条尚未核准</span>}
+																{c.evidenceUrl && (
+																	<>
+																		{" · "}
+																		<a
+																			className="underline underline-offset-2"
+																			href={c.evidenceUrl}
+																			target="_blank"
+																			rel="noreferrer"
+																		>
+																			证据
+																		</a>
+																	</>
+																)}
+															</p>
+														</div>
+													))}
+												</div>
+											</div>
+										)}
+
+										<article className="prose prose-sm max-w-none whitespace-pre-wrap">{detail.draft.body}</article>
+
+										{detail.history.length > 0 && (
+											<div className="text-muted-foreground space-y-1 text-xs">
+												{detail.history.map((h) => (
+													<p key={h.id}>
+														{new Date(h.createdAt).toLocaleString("zh-CN")} · {h.action}
+														{h.note ? ` · ${h.note}` : ""}
+													</p>
+												))}
+											</div>
+										)}
+
+										{(d.status === "pending_review" || d.status === "needs_facts") && (
+											<div className="space-y-2 border-t pt-4">
+												<Input
+													value={note}
+													onChange={(e) => setNote(e.target.value)}
+													placeholder={
+														d.status === "needs_facts" ? "通过这篇必须写明理由（会记进审核记录）" : "审核意见，选填"
+													}
+												/>
+												{error && <p className="text-destructive text-sm">{error}</p>}
+												<div className="flex gap-2">
+													<Button onClick={() => decide(d.id, "approve")}>通过</Button>
+													<Button variant="ghost" onClick={() => decide(d.id, "reject")}>
+														打回
+													</Button>
+												</div>
+											</div>
+										)}
 									</CardContent>
 								)}
 							</Card>

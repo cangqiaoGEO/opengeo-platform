@@ -3,9 +3,9 @@ import { classifyDraft, findAdLawTerms } from "./generate";
 
 describe("draft gating", () => {
 	it("sends a clean draft to review", () => {
-		expect(
-			classifyDraft({ unsupported: [], flaggedTerms: [], factBinding: "strict", blockAdLawTerms: true }),
-		).toBe("pending_review");
+		expect(classifyDraft({ unsupported: [], flaggedTerms: [], factBinding: "strict", blockAdLawTerms: true })).toBe(
+			"pending_review",
+		);
 	});
 
 	it("holds a draft that asserts something the fact base cannot support", () => {

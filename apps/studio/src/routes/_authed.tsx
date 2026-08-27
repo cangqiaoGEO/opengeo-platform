@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, redirect, useMatchRoute } from "@tanstack/react-router";
 import { cn } from "@workspace/ui/lib/utils";
-import { FileText, Images, Layers, ListChecks, Wand2 } from "lucide-react";
+import { FileText, Images, Layers, ListChecks, ShieldAlert, SlidersHorizontal, Wand2 } from "lucide-react";
+import { getGuardrails } from "@/server/guardrails";
 import { getWorkspace } from "@/server/tenant";
 
 /**
@@ -11,12 +12,17 @@ import { getWorkspace } from "@/server/tenant";
 export const Route = createFileRoute("/_authed")({
 	beforeLoad: async () => {
 		try {
-			return { workspace: await getWorkspace() };
+			const workspace = await getWorkspace();
+			const firstBrand = workspace.brands[0];
+			// The banner has to be visible from every page, so the shell resolves
+			// the relaxed state once rather than each page remembering to check.
+			const relaxed = firstBrand ? (await getGuardrails({ data: { brandId: firstBrand.id } })).relaxed : [];
+			return { workspace, relaxed };
 		} catch {
 			throw redirect({ href: `${platformUrl()}/auth/login` });
 		}
 	},
-	loader: ({ context }) => context.workspace,
+	loader: ({ context }) => ({ ...context.workspace, relaxed: context.relaxed }),
 	component: StudioShell,
 });
 
@@ -31,11 +37,12 @@ const NAV = [
 	{ to: "/assets" as const, label: "素材库", icon: Images, ready: false },
 	{ to: "/templates" as const, label: "指令模板", icon: FileText, ready: true },
 	{ to: "/tasks" as const, label: "创作任务", icon: Wand2, ready: true },
-	{ to: "/drafts" as const, label: "草稿", icon: ListChecks, ready: true },
+	{ to: "/drafts" as const, label: "草稿与审核", icon: ListChecks, ready: true },
+	{ to: "/settings" as const, label: "护栏设置", icon: SlidersHorizontal, ready: true },
 ];
 
 function StudioShell() {
-	const { user } = Route.useLoaderData();
+	const { user, relaxed } = Route.useLoaderData();
 	const matchRoute = useMatchRoute();
 
 	return (
@@ -87,6 +94,12 @@ function StudioShell() {
 				</div>
 			</aside>
 			<main className="min-w-0 flex-1">
+				{relaxed.length > 0 && (
+					<div className="border-destructive/50 bg-destructive/5 text-destructive flex items-center gap-2 border-b px-8 py-2 text-xs">
+						<ShieldAlert className="size-3.5 shrink-0" />
+						<span>护栏已放宽：{relaxed.join("；")}</span>
+					</div>
+				)}
 				<Outlet />
 			</main>
 		</div>

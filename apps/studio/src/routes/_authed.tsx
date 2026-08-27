@@ -34,7 +34,7 @@ function platformUrl() {
  *  says "this is coming" where a missing one just looks unfinished. */
 const NAV = [
 	{ to: "/facts" as const, label: "事实库", icon: Layers, ready: true },
-	{ to: "/assets" as const, label: "素材库", icon: Images, ready: false },
+	{ to: "/assets" as const, label: "素材库", icon: Images, ready: true },
 	{ to: "/templates" as const, label: "指令模板", icon: FileText, ready: true },
 	{ to: "/tasks" as const, label: "创作任务", icon: Wand2, ready: true },
 	{ to: "/drafts" as const, label: "草稿与审核", icon: ListChecks, ready: true },

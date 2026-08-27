@@ -9,7 +9,8 @@
 		"build": "vite build",
 		"start": "node .output/server/index.mjs",
 		"lint": "biome lint",
-		"check-types": "tsc --noEmit"
+		"check-types": "tsc --noEmit",
+		"test": "vitest run"
 	},
 	"dependencies": {
 		"@tailwindcss/vite": "^4.3.3",
@@ -33,6 +34,7 @@
 		"@vitejs/plugin-react": "^6.0.5",
 		"nitro": "npm:nitro-nightly@3.0.1-20260223-102354-c0b46421",
 		"typescript": "^7.0.2",
-		"vite": "^8.2.1"
+		"vite": "^8.2.1",
+		"vitest": "^4.1.10"
 	}
 }

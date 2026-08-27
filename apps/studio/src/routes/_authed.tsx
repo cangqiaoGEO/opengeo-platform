@@ -28,10 +28,10 @@ function platformUrl() {
  *  says "this is coming" where a missing one just looks unfinished. */
 const NAV = [
 	{ to: "/facts" as const, label: "事实库", icon: Layers, ready: true },
-	{ to: "/assets", label: "素材库", icon: Images, ready: false },
-	{ to: "/templates", label: "指令模板", icon: FileText, ready: false },
-	{ to: "/tasks", label: "创作任务", icon: Wand2, ready: false },
-	{ to: "/drafts", label: "草稿", icon: ListChecks, ready: false },
+	{ to: "/assets" as const, label: "素材库", icon: Images, ready: false },
+	{ to: "/templates" as const, label: "指令模板", icon: FileText, ready: true },
+	{ to: "/tasks" as const, label: "创作任务", icon: Wand2, ready: true },
+	{ to: "/drafts" as const, label: "草稿", icon: ListChecks, ready: true },
 ];
 
 function StudioShell() {
@@ -60,11 +60,11 @@ function StudioShell() {
 								</span>
 							);
 						}
-						const active = Boolean(matchRoute({ to: "/facts", fuzzy: true }));
+						const active = Boolean(matchRoute({ to: item.to as "/facts", fuzzy: true }));
 						return (
 							<Link
 								key={item.to}
-								to="/facts"
+								to={item.to as "/facts"}
 								search={{ brand: undefined }}
 								className={cn(
 									"flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",

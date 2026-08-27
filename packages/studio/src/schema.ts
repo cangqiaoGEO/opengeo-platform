@@ -196,6 +196,12 @@ export const assets = pgTable(
 		/** The page this came from — an asset without a provenance is one nobody
 		 *  can re-check when the site changes. */
 		sourceUrl: text("source_url"),
+		/** Path under the media directory once the file has been mirrored. Images
+		 *  stay remote — publishing references them anyway — but a video has to be
+		 *  uploaded as a file to every channel that matters, so a link alone is
+		 *  not a usable asset. Null for anything still only referenced. */
+		localPath: text("local_path"),
+		sizeBytes: integer("size_bytes"),
 		/** Who may use this and under what terms — the risk an export brand
 		 *  actually carries when a factory photo turns out to be a supplier's. */
 		licenseSource: text("license_source"),

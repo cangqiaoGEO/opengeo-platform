@@ -109,22 +109,48 @@ function AssetsPage() {
 					))}
 				</div>
 			) : kind === "video" ? (
-				<div className="divide-y rounded-lg border">
-					{rows.map((a) => (
-						<div key={a.id} className="flex items-center justify-between gap-4 p-4">
-							<div className="min-w-0">
-								<a
-									className="text-sm break-all underline underline-offset-2"
-									href={a.fileUrl ?? "#"}
-									target="_blank"
-									rel="noreferrer"
-								>
-									{a.fileUrl}
-								</a>
-								<p className="text-muted-foreground mt-1 text-xs">{a.category}</p>
+				<div className="space-y-3">
+					{rows.map((a) => {
+						const embedded = /youtube|youtu\.be|vimeo|bilibili/i.test(a.fileUrl ?? "");
+						return (
+							<div key={a.id} className="rounded-lg border p-4">
+								<div className="flex items-start justify-between gap-4">
+									<div className="min-w-0">
+										<a
+											className="text-sm break-all underline underline-offset-2"
+											href={a.fileUrl ?? "#"}
+											target="_blank"
+											rel="noreferrer"
+										>
+											{a.fileUrl}
+										</a>
+										<p className="text-muted-foreground mt-1 text-xs">{a.category}</p>
+									</div>
+									{a.localPath ? (
+										<Badge>已存本地 · {((a.sizeBytes ?? 0) / 1024 / 1024).toFixed(1)} MB</Badge>
+									) : embedded ? (
+										<Badge variant="secondary">需向客户索取原片</Badge>
+									) : (
+										<Badge variant="outline">仅引用</Badge>
+									)}
+								</div>
+								{a.localPath && (
+									// biome-ignore lint/a11y/useMediaCaption: 客户原片，字幕由客户提供
+									<video
+										className="mt-3 w-full max-w-md rounded-md"
+										controls
+										preload="metadata"
+										src={`/media/${a.localPath}`}
+									/>
+								)}
+								{!a.localPath && embedded && (
+									<p className="text-muted-foreground mt-2 text-xs">
+										平台嵌入的播放页不抓取——那既违反对方条款，拿到的也是转码版。发到公众号或视频号需要原始文件，向客户索取。
+									</p>
+								)}
 							</div>
-						</div>
-					))}
+						);
+					})}
 				</div>
 			) : (
 				<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

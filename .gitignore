@@ -90,3 +90,6 @@ apps/web/storybook-static/
 .claude/worktrees/
 .readonlydb
 .pnpm-store/
+
+# Studio 镜像下来的客户媒体文件，不进版本库
+.media/

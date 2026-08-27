@@ -309,3 +309,56 @@ export const reviewActions = pgTable(
 	},
 	(table) => [index("studio_review_actions_draft_idx").on(table.draftId, table.createdAt)],
 );
+
+/**
+ * Where a piece can go. `export` needs no credentials and works everywhere,
+ * which is why it is the channel a deployment starts with; the others exist
+ * once someone has connected an account that has an official API. Channels
+ * without one are deliberately absent — see the D2 decision in the plan.
+ */
+export const publishChannelEnum = pgEnum("studio_publish_channel", ["export", "website", "wechat_draft"]);
+
+export const publishTargets = pgTable(
+	"studio_publish_targets",
+	{
+		id: uuid("id").defaultRandom().primaryKey().notNull(),
+		organizationId: text("organization_id").notNull(),
+		brandId: text("brand_id").notNull(),
+		channel: publishChannelEnum("channel").notNull(),
+		name: text("name").notNull(),
+		/** Non-secret channel settings. Credentials belong in the platform's
+		 *  encrypted secrets store, never here. */
+		config: jsonb("config").$type<Record<string, string>>().default({}).notNull(),
+		enabled: boolean("enabled").default(true).notNull(),
+		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+	},
+	(table) => [index("studio_publish_targets_brand_idx").on(table.brandId, table.channel)],
+);
+
+/**
+ * One row per thing that actually left the building. `url` is what makes the
+ * loop closeable: the tracking side already stores every URL an engine cited,
+ * so a published page can be checked against real answers instead of assumed
+ * to have worked.
+ */
+export const publishRecords = pgTable(
+	"studio_publish_records",
+	{
+		id: uuid("id").defaultRandom().primaryKey().notNull(),
+		draftId: uuid("draft_id")
+			.references(() => contentDrafts.id, { onDelete: "cascade" })
+			.notNull(),
+		brandId: text("brand_id").notNull(),
+		channel: publishChannelEnum("channel").notNull(),
+		/** Null while a package has been exported but nobody has said where it
+		 *  landed — an honest state, and the one the list nags about. */
+		url: text("url"),
+		note: text("note"),
+		publishedBy: text("published_by").notNull(),
+		publishedAt: timestamp("published_at", { withTimezone: true }).defaultNow().notNull(),
+	},
+	(table) => [
+		index("studio_publish_records_brand_idx").on(table.brandId, table.publishedAt),
+		index("studio_publish_records_draft_idx").on(table.draftId),
+	],
+);

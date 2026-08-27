@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useMatchRoute } from "@tanstack/react-router";
 import { cn } from "@workspace/ui/lib/utils";
-import { FileText, Images, Layers, ListChecks, ShieldAlert, SlidersHorizontal, Wand2 } from "lucide-react";
+import { FileText, Images, Layers, ListChecks, Send, ShieldAlert, SlidersHorizontal, Wand2 } from "lucide-react";
 import { getGuardrails } from "@/server/guardrails";
 import { getWorkspace } from "@/server/tenant";
 
@@ -38,6 +38,7 @@ const NAV = [
 	{ to: "/templates" as const, label: "指令模板", icon: FileText, ready: true },
 	{ to: "/tasks" as const, label: "创作任务", icon: Wand2, ready: true },
 	{ to: "/drafts" as const, label: "草稿与审核", icon: ListChecks, ready: true },
+	{ to: "/publish" as const, label: "分发与回收", icon: Send, ready: true },
 	{ to: "/settings" as const, label: "护栏设置", icon: SlidersHorizontal, ready: true },
 ];
 

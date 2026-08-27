@@ -169,23 +169,42 @@ export const draftStatusEnum = pgEnum("studio_draft_status", [
  *  how a batch ends up reading like one article repeated. */
 export const templateKindEnum = pgEnum("studio_template_kind", ["title", "article"]);
 
+/**
+ * What kind of thing an asset is. Text lives here alongside images because the
+ * brand's own wording — a spec paragraph, an FAQ answer — is reusable material
+ * in exactly the same way a factory photo is, and keeping the two in one place
+ * is what lets a draft pull both from a single library.
+ */
+export const assetKindEnum = pgEnum("studio_asset_kind", ["image", "video", "text"]);
+
 export const assets = pgTable(
 	"studio_assets",
 	{
 		id: uuid("id").defaultRandom().primaryKey().notNull(),
 		organizationId: text("organization_id").notNull(),
 		brandId: text("brand_id").notNull(),
+		kind: assetKindEnum("kind").default("image").notNull(),
 		category: text("category").notNull(),
-		fileUrl: text("file_url").notNull(),
-		mimeType: text("mime_type").notNull(),
+		title: text("title"),
+		/** Remote URL for image and video. Null for text. */
+		fileUrl: text("file_url"),
+		mimeType: text("mime_type"),
+		/** The copy itself, for text assets. */
+		content: text("content"),
 		/** Written into the published page, so it is content rather than metadata. */
 		altText: text("alt_text"),
-		/** Who may use this image and under what terms — the risk an export brand
+		/** The page this came from — an asset without a provenance is one nobody
+		 *  can re-check when the site changes. */
+		sourceUrl: text("source_url"),
+		/** Who may use this and under what terms — the risk an export brand
 		 *  actually carries when a factory photo turns out to be a supplier's. */
 		licenseSource: text("license_source"),
 		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 	},
-	(table) => [index("studio_assets_brand_idx").on(table.brandId, table.category)],
+	(table) => [
+		index("studio_assets_brand_idx").on(table.brandId, table.kind, table.category),
+		uniqueIndex("studio_assets_brand_file_uidx").on(table.brandId, table.fileUrl),
+	],
 );
 
 export const instructionTemplates = pgTable(

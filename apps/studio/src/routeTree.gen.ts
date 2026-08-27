@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedRouteImport } from './routes/_authed'
+import { Route as AuthedAssetsRouteImport } from './routes/_authed/assets'
 import { Route as AuthedDraftsRouteImport } from './routes/_authed/drafts'
 import { Route as AuthedFactsRouteImport } from './routes/_authed/facts'
 import { Route as AuthedSettingsRouteImport } from './routes/_authed/settings'
@@ -25,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthedRoute = AuthedRouteImport.update({
   id: '/_authed',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedAssetsRoute = AuthedAssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedDraftsRoute = AuthedDraftsRouteImport.update({
   id: '/drafts',
@@ -54,6 +60,7 @@ const AuthedTemplatesRoute = AuthedTemplatesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assets': typeof AuthedAssetsRoute
   '/drafts': typeof AuthedDraftsRoute
   '/facts': typeof AuthedFactsRoute
   '/settings': typeof AuthedSettingsRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assets': typeof AuthedAssetsRoute
   '/drafts': typeof AuthedDraftsRoute
   '/facts': typeof AuthedFactsRoute
   '/settings': typeof AuthedSettingsRoute
@@ -72,6 +80,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
+  '/_authed/assets': typeof AuthedAssetsRoute
   '/_authed/drafts': typeof AuthedDraftsRoute
   '/_authed/facts': typeof AuthedFactsRoute
   '/_authed/settings': typeof AuthedSettingsRoute
@@ -80,13 +89,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/drafts' | '/facts' | '/settings' | '/tasks' | '/templates'
+  fullPaths:
+    | '/'
+    | '/assets'
+    | '/drafts'
+    | '/facts'
+    | '/settings'
+    | '/tasks'
+    | '/templates'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/drafts' | '/facts' | '/settings' | '/tasks' | '/templates'
+  to:
+    | '/'
+    | '/assets'
+    | '/drafts'
+    | '/facts'
+    | '/settings'
+    | '/tasks'
+    | '/templates'
   id:
     | '__root__'
     | '/'
     | '/_authed'
+    | '/_authed/assets'
     | '/_authed/drafts'
     | '/_authed/facts'
     | '/_authed/settings'
@@ -114,6 +138,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthedRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authed/assets': {
+      id: '/_authed/assets'
+      path: '/assets'
+      fullPath: '/assets'
+      preLoaderRoute: typeof AuthedAssetsRouteImport
+      parentRoute: typeof AuthedRoute
     }
     '/_authed/drafts': {
       id: '/_authed/drafts'
@@ -154,6 +185,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthedRouteChildren {
+  AuthedAssetsRoute: typeof AuthedAssetsRoute
   AuthedDraftsRoute: typeof AuthedDraftsRoute
   AuthedFactsRoute: typeof AuthedFactsRoute
   AuthedSettingsRoute: typeof AuthedSettingsRoute
@@ -162,6 +194,7 @@ interface AuthedRouteChildren {
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
+  AuthedAssetsRoute: AuthedAssetsRoute,
   AuthedDraftsRoute: AuthedDraftsRoute,
   AuthedFactsRoute: AuthedFactsRoute,
   AuthedSettingsRoute: AuthedSettingsRoute,

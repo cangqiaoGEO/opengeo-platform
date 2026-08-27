@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as AuthedAssetsRouteImport } from './routes/_authed/assets'
+import { Route as AuthedAttributionRouteImport } from './routes/_authed/attribution'
 import { Route as AuthedDraftsRouteImport } from './routes/_authed/drafts'
 import { Route as AuthedFactsRouteImport } from './routes/_authed/facts'
 import { Route as AuthedPublishRouteImport } from './routes/_authed/publish'
@@ -32,6 +33,11 @@ const AuthedRoute = AuthedRouteImport.update({
 const AuthedAssetsRoute = AuthedAssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedAttributionRoute = AuthedAttributionRouteImport.update({
+  id: '/attribution',
+  path: '/attribution',
   getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedDraftsRoute = AuthedDraftsRouteImport.update({
@@ -73,6 +79,7 @@ const MediaSplatRoute = MediaSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assets': typeof AuthedAssetsRoute
+  '/attribution': typeof AuthedAttributionRoute
   '/drafts': typeof AuthedDraftsRoute
   '/facts': typeof AuthedFactsRoute
   '/publish': typeof AuthedPublishRoute
@@ -84,6 +91,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assets': typeof AuthedAssetsRoute
+  '/attribution': typeof AuthedAttributionRoute
   '/drafts': typeof AuthedDraftsRoute
   '/facts': typeof AuthedFactsRoute
   '/publish': typeof AuthedPublishRoute
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
   '/_authed/assets': typeof AuthedAssetsRoute
+  '/_authed/attribution': typeof AuthedAttributionRoute
   '/_authed/drafts': typeof AuthedDraftsRoute
   '/_authed/facts': typeof AuthedFactsRoute
   '/_authed/publish': typeof AuthedPublishRoute
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/assets'
+    | '/attribution'
     | '/drafts'
     | '/facts'
     | '/publish'
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/assets'
+    | '/attribution'
     | '/drafts'
     | '/facts'
     | '/publish'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authed'
     | '/_authed/assets'
+    | '/_authed/attribution'
     | '/_authed/drafts'
     | '/_authed/facts'
     | '/_authed/publish'
@@ -169,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/assets'
       fullPath: '/assets'
       preLoaderRoute: typeof AuthedAssetsRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/attribution': {
+      id: '/_authed/attribution'
+      path: '/attribution'
+      fullPath: '/attribution'
+      preLoaderRoute: typeof AuthedAttributionRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/_authed/drafts': {
@@ -225,6 +244,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthedRouteChildren {
   AuthedAssetsRoute: typeof AuthedAssetsRoute
+  AuthedAttributionRoute: typeof AuthedAttributionRoute
   AuthedDraftsRoute: typeof AuthedDraftsRoute
   AuthedFactsRoute: typeof AuthedFactsRoute
   AuthedPublishRoute: typeof AuthedPublishRoute
@@ -235,6 +255,7 @@ interface AuthedRouteChildren {
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedAssetsRoute: AuthedAssetsRoute,
+  AuthedAttributionRoute: AuthedAttributionRoute,
   AuthedDraftsRoute: AuthedDraftsRoute,
   AuthedFactsRoute: AuthedFactsRoute,
   AuthedPublishRoute: AuthedPublishRoute,

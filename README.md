@@ -73,7 +73,7 @@ OpenGEO Platform 追踪 AI 答案引擎——ChatGPT、Perplexity、Gemini、Cop
 
 ## 中文引擎
 
-上游只覆盖国际引擎。本分叉把国内四家接成一等公民，走官方 API 通道：
+上游只覆盖国际引擎。本分叉把国内四家答案引擎接成一等公民，走各自的官方 API 通道：
 
 | 引擎 | 通道 | 凭证 |
 |---|---|---|
@@ -81,9 +81,17 @@ OpenGEO Platform 追踪 AI 答案引擎——ChatGPT、Perplexity、Gemini、Cop
 | 通义千问 | DashScope 强制联网 + 结构化引用 | `DASHSCOPE_API_KEY` |
 | DeepSeek | DeepSeek 官方 API | `DEEPSEEK_API_KEY` |
 | 腾讯元宝 | TokenHub + 联网检索 | `TENCENT_TOKENHUB_API_KEY` |
-| 阿里云百炼 | OpenAI 兼容面，一个 key 覆盖 Qwen / DeepSeek / GLM | `BAILIAN_API_KEY` |
 
-百炼通道额外承担 onboarding 的结构化研究与 Studio 的内容生成——它支持 json_schema 结构化输出，但**不返回引用 URL**，这一点写在 provider 的注释里，citations 返回空数组而不是编造。
+## 模型网关
+
+阿里云百炼不是答案引擎，是一个 OpenAI 兼容的模型网关——一个 key 后面挂着 Qwen、DeepSeek、GLM 三家的模型。它在这里承担两件事：
+
+- **onboarding 的结构化研究** —— 它支持 `json_schema` 结构化输出，这是品牌分析唯一的硬需求
+- **Studio 的内容生成** —— 成本远低于按引擎采集
+
+凭证是 `BAILIAN_API_KEY`，base URL 可用 `BAILIAN_BASE_URL` 覆盖。
+
+一个必须知道的边界：**百炼不返回引用 URL。**联网检索确实会发生（它能答出只有实时检索才知道的信息），但响应体里没有 `search_info` / `annotations` / `sources` 任何一个字段。所以这条通道的 citations 返回空数组而不是编造——用它跑追踪时，可见度与竞对份额有数据，引用来源与检索扩散会是空的。要那两块数据，得走消费者界面采集通道。
 
 ## 快速开始
 

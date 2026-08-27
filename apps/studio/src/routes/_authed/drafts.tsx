@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/componen
 import { Input } from "@workspace/ui/components/input";
 import { useState } from "react";
 import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { getDraft, reviewDraft } from "@/server/review";
 import { listDrafts } from "@/server/tasks";
@@ -17,19 +18,32 @@ const BLOCK_REASONS: Record<string, string> = {
 
 /**
  * The model cites entries by id, which is what makes the binding checkable —
- * and unreadable. Swap each id for the number of the source in the list below
- * the article, so a reviewer reads prose with footnotes instead of UUIDs.
+ * and unreadable. It writes the marker three different ways depending on the
+ * brief it followed, so all of them collapse to the number of the source in the
+ * list under the article: the reviewer reads prose with footnotes.
  */
 function withFootnotes(body: string): string {
 	const order: string[] = [];
-	return body.replace(/\[([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\]/g, (_m, id: string) => {
+	const numberFor = (id: string) => {
 		let index = order.indexOf(id);
 		if (index === -1) {
 			order.push(id);
 			index = order.length - 1;
 		}
-		return `[${index + 1}]`;
-	});
+		return index + 1;
+	};
+
+	return body.replace(
+		/\[(?:id=)?((?:[0-9a-f-]{36})(?:\s*[,、]\s*(?:id=)?[0-9a-f-]{36})*)\]/g,
+		(_match, ids: string) => {
+			const numbers = ids
+				.split(/[,、]/)
+				.map((raw) => raw.replace(/id=/, "").trim())
+				.filter((id) => id.length === 36)
+				.map(numberFor);
+			return numbers.length ? `<sup class="citation">[${numbers.join(",")}]</sup>` : "";
+		},
+	);
 }
 
 const STATUS: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
@@ -170,8 +184,10 @@ function DraftsPage() {
 											</div>
 										)}
 
-										<article className="prose prose-sm dark:prose-invert max-w-none">
-											<Markdown remarkPlugins={[remarkGfm]}>{withFootnotes(detail.draft.body)}</Markdown>
+										<article className="prose prose-sm prose-draft dark:prose-invert max-w-none">
+											<Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+												{withFootnotes(detail.draft.body)}
+											</Markdown>
 										</article>
 
 										{detail.history.length > 0 && (

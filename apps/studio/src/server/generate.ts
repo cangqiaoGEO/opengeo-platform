@@ -158,6 +158,12 @@ export async function generateDraft(args: {
 		},
 	);
 	body = body.replace(/!\[[^\]]*\]\([^)]*\)/g, (match) => (match.includes("http") ? match : ""));
+	// Removing an image from inside emphasis leaves the markers behind, and a
+	// stray ** renders as literal asterisks in the reading view.
+	body = body
+		.replace(/\*\*\s*\*\*/g, "")
+		.replace(/(^|\n)\s*\*\*\s*(\n|$)/g, "$1$2")
+		.replace(/\n{3,}/g, "\n\n");
 
 	// Second: whatever it asked for in the structured field, placed after the
 	// section it named rather than wherever the prose happened to mention it.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyDraft, detectLanguage, findAdLawTerms } from "./generate";
+import { classifyDraft, detectLanguage, findAdLawTerms, publishableImageUrl } from "./generate";
 
 const CLEAN = { unsupported: [], flaggedTerms: [], factBinding: "strict" as const, blockAdLawTerms: true };
 
@@ -91,5 +91,21 @@ describe("ad-law screening", () => {
 
 	it("passes ordinary copy", () => {
 		expect(findAdLawTerms("月产能与交期按订单量浮动，具体以合同为准")).toEqual([]);
+	});
+});
+
+describe("publishable image urls", () => {
+	it("drops the resize pipeline so an article gets the original upload", () => {
+		expect(
+			publishableImageUrl("https://icdn.tradew.com/a.jpg?x-oss-process=image/resize,m_fill,h_80,w_120/quality,Q_90"),
+		).toBe("https://icdn.tradew.com/a.jpg");
+	});
+
+	it("leaves a plain url alone", () => {
+		expect(publishableImageUrl("https://icdn.tradew.com/a.jpg")).toBe("https://icdn.tradew.com/a.jpg");
+	});
+
+	it("keeps a query that is not an image pipeline", () => {
+		expect(publishableImageUrl("https://cdn.example.com/a.jpg?v=3")).toBe("https://cdn.example.com/a.jpg?v=3");
 	});
 });

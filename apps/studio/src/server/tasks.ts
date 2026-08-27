@@ -77,6 +77,7 @@ export const createTask = createServerFn({ method: "POST" })
 			name: z.string().min(1),
 			promptIds: z.array(z.string()).min(1),
 			draftCount: z.number().int().min(1).max(20),
+			imagesPerDraft: z.number().int().min(0).max(6).default(2),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -92,6 +93,7 @@ export const createTask = createServerFn({ method: "POST" })
 				name: data.name,
 				promptIds: data.promptIds,
 				draftCount: data.draftCount,
+				imagesPerDraft: data.imagesPerDraft,
 				// Frozen here, not read at review time: what the rules were when this
 				// batch was written is the question an incident actually asks.
 				guardrails: {

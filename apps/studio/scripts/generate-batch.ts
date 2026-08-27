@@ -13,9 +13,11 @@ import { eq } from "drizzle-orm";
 import { runNextDraft } from "../src/server/task-runner";
 
 async function main() {
-	const [brandId, name, countArg, ...tags] = process.argv.slice(2);
-	if (!brandId || !name || !countArg) throw new Error("用法：generate-batch.ts <brandId> <name> <count> [tag...]");
+	const [brandId, name, countArg, imagesArg, ...tags] = process.argv.slice(2);
+	if (!brandId || !name || !countArg || imagesArg === undefined)
+		throw new Error("用法：generate-batch.ts <brandId> <name> <count> <imagesPerDraft> [tag...]");
 	const draftCount = Number(countArg);
+	const imagesPerDraft = Number(imagesArg);
 
 	const [factBase] = await db.select().from(factBases).where(eq(factBases.brandId, brandId));
 	if (!factBase) throw new Error("这个品牌还没有事实库");
@@ -46,6 +48,7 @@ async function main() {
 			name,
 			promptIds: selected.map((p) => p.id),
 			draftCount,
+			imagesPerDraft,
 			guardrails,
 			createdBy: "cli",
 		})
@@ -61,7 +64,7 @@ async function main() {
 			const seconds = ((Date.now() - started) / 1000).toFixed(0);
 			console.log(
 				`${String(i + 1).padStart(2)}. ${r.title}\n` +
-					`    ${r.status === "pending_review" ? "待审核" : "待补事实"} · 引用 ${r.citations} 处 · 无据 ${r.unsupported} 条` +
+					`    ${r.status === "pending_review" ? "待审核" : "待补事实"} · 引用 ${r.citations} 处 · 配图 ${r.images} 张 · 无据 ${r.unsupported} 条` +
 					`${r.flaggedTerms.length ? ` · 敏感词 ${r.flaggedTerms.join("/")}` : ""} · ${seconds}s\n` +
 					`    ${r.articleTemplate} × ${r.titleTemplate}\n    ← ${r.prompt}\n`,
 			);

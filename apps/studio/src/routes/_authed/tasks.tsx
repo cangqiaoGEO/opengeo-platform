@@ -29,6 +29,7 @@ function TasksPage() {
 	const [name, setName] = useState("");
 	const [selected, setSelected] = useState<string[]>([]);
 	const [draftCount, setDraftCount] = useState(3);
+	const [imagesPerDraft, setImagesPerDraft] = useState(2);
 	const [running, setRunning] = useState(false);
 	const [log, setLog] = useState<LogLine[]>([]);
 
@@ -89,10 +90,21 @@ function TasksPage() {
 					<CardDescription>优先挑那些监测里还没命中的问题——那才是缺口。已选 {selected.length} 个问题。</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
-					<div className="grid gap-4 sm:grid-cols-2">
+					<div className="grid gap-4 sm:grid-cols-3">
 						<div className="space-y-2">
 							<Label htmlFor="taskname">任务名</Label>
 							<Input id="taskname" value={name} onChange={(e) => setName(e.target.value)} placeholder="例：9月第一批" />
+						</div>
+						<div className="space-y-2">
+							<Label htmlFor="images">每篇配图</Label>
+							<Input
+								id="images"
+								type="number"
+								min={0}
+								max={6}
+								value={imagesPerDraft}
+								onChange={(e) => setImagesPerDraft(Number(e.target.value))}
+							/>
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="count">生成篇数</Label>
@@ -130,7 +142,9 @@ function TasksPage() {
 						disabled={running || blocked.length > 0 || !name.trim() || selected.length === 0}
 						onClick={async () => {
 							setLog([]);
-							const task = await createTask({ data: { brandId, name, promptIds: selected, draftCount } });
+							const task = await createTask({
+								data: { brandId, name, promptIds: selected, draftCount, imagesPerDraft },
+							});
 							await run(task.id, draftCount);
 						}}
 					>

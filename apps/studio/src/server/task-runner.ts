@@ -1,7 +1,7 @@
 import { db } from "@workspace/lib/db/db";
 import { prompts } from "@workspace/lib/db/schema";
-import { contentDrafts, contentTasks, factBases, instructionTemplates } from "@workspace/studio/schema";
-import { and, count, eq, inArray } from "drizzle-orm";
+import { assets, contentDrafts, contentTasks, factBases, instructionTemplates } from "@workspace/studio/schema";
+import { and, count, eq, inArray, isNotNull, sql } from "drizzle-orm";
 import { generateDraft } from "./generate";
 
 /**
@@ -41,6 +41,19 @@ export async function runNextDraft(taskId: string) {
 	const article = articles[made % articles.length];
 	const title = titles[made % titles.length];
 
+	// Candidates are drawn wide and left to the model to choose from: it knows
+	// which section it is about to write, and a keyword match on alt text picks
+	// the same sofa photo for every article.
+	const imageCandidates =
+		task.imagesPerDraft > 0
+			? await db
+					.select({ id: assets.id, url: assets.fileUrl, alt: assets.altText, category: assets.category })
+					.from(assets)
+					.where(and(eq(assets.brandId, task.brandId), eq(assets.kind, "image"), isNotNull(assets.altText)))
+					.orderBy(sql`random()`)
+					.limit(24)
+			: [];
+
 	const result = await generateDraft({
 		taskId: task.id,
 		brandId: task.brandId,
@@ -50,6 +63,8 @@ export async function runNextDraft(taskId: string) {
 		titleInstruction: title.body,
 		factBinding: task.guardrails.factBinding,
 		blockAdLawTerms: task.guardrails.blockAdLawTerms,
+		imageCandidates: imageCandidates.filter((c): c is typeof c & { url: string } => Boolean(c.url)),
+		imageCount: task.imagesPerDraft,
 	});
 
 	return { ...result, prompt: promptRow.value, articleTemplate: article.name, titleTemplate: title.name };

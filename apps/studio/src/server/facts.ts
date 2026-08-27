@@ -4,6 +4,7 @@ import { factBases, factEntries } from "@workspace/studio/schema";
 import { and, asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { FACT_FIELDS } from "@/shared/fact-fields";
+import { syncFactsCore } from "./bundle-sync";
 import { requireBrand, requireSession } from "./guards";
 
 /**
@@ -13,6 +14,16 @@ import { requireBrand, requireSession } from "./guards";
  */
 
 const fieldSchema = z.enum(FACT_FIELDS);
+
+/**
+ * When STUDIO_BUNDLE_DIR is set the git bundle is the only writable source of
+ * facts (opengeo-spec BUNDLE.md): studio becomes a read-only view plus a sync
+ * button, and every edit — approval included — happens in markdown.
+ */
+const bundleDir = () => process.env.STUDIO_BUNDLE_DIR || null;
+function assertBundleModeOff() {
+	if (bundleDir()) throw new Error("事实源已切换至 bundle（git）：请在 bundle 仓库中编辑后同步");
+}
 
 export const getFactBase = createServerFn({ method: "GET" })
 	.validator(z.object({ brandId: z.string() }))
@@ -29,7 +40,7 @@ export const getFactBase = createServerFn({ method: "GET" })
 			.where(eq(factEntries.factBaseId, base.id))
 			.orderBy(asc(factEntries.field), asc(factEntries.createdAt));
 
-		return { base, entries };
+		return { base, entries, bundleMode: Boolean(bundleDir()) };
 	});
 
 export const createFactBase = createServerFn({ method: "POST" })
@@ -71,6 +82,7 @@ export const createFactEntry = createServerFn({ method: "POST" })
 		}),
 	)
 	.handler(async ({ data }) => {
+		assertBundleModeOff();
 		const session = await requireSession();
 		await requireWritableBase(session.user.id, data.factBaseId);
 
@@ -97,6 +109,7 @@ export const createFactEntry = createServerFn({ method: "POST" })
 export const setFactEntryApproval = createServerFn({ method: "POST" })
 	.validator(z.object({ entryId: z.string().uuid(), approved: z.boolean() }))
 	.handler(async ({ data }) => {
+		assertBundleModeOff();
 		const session = await requireSession();
 		const [entry] = await db.select().from(factEntries).where(eq(factEntries.id, data.entryId));
 		if (!entry) throw new Error("Entry not found");
@@ -115,6 +128,7 @@ export const updateFactEntry = createServerFn({ method: "POST" })
 		}),
 	)
 	.handler(async ({ data }) => {
+		assertBundleModeOff();
 		const session = await requireSession();
 		const [entry] = await db.select().from(factEntries).where(eq(factEntries.id, data.entryId));
 		if (!entry) throw new Error("Entry not found");
@@ -136,10 +150,30 @@ export const updateFactEntry = createServerFn({ method: "POST" })
 export const deleteFactEntry = createServerFn({ method: "POST" })
 	.validator(z.object({ entryId: z.string().uuid() }))
 	.handler(async ({ data }) => {
+		assertBundleModeOff();
 		const session = await requireSession();
 		const [entry] = await db.select().from(factEntries).where(eq(factEntries.id, data.entryId));
 		if (!entry) return;
 		await requireWritableBase(session.user.id, entry.factBaseId);
 
 		await db.delete(factEntries).where(and(eq(factEntries.id, data.entryId)));
+	});
+
+/**
+ * Pull the bundle's facts/ directory into the runtime copy. Bundle wins on
+ * every field; entries that exist only in the database are reported, never
+ * deleted (draft citations reference them with ON DELETE RESTRICT).
+ */
+export const syncFactsFromBundle = createServerFn({ method: "POST" })
+	.validator(z.object({ brandId: z.string() }))
+	.handler(async ({ data }) => {
+		const session = await requireSession();
+		await requireBrand(session.user.id, data.brandId);
+		const dir = bundleDir();
+		if (!dir) throw new Error("未配置 STUDIO_BUNDLE_DIR");
+
+		const [base] = await db.select().from(factBases).where(eq(factBases.brandId, data.brandId));
+		if (!base) throw new Error("这个品牌还没有事实库");
+
+		return syncFactsCore(base.id, session.user.id, dir);
 	});

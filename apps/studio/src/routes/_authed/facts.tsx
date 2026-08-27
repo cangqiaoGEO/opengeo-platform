@@ -7,7 +7,7 @@ import { Label } from "@workspace/ui/components/label";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Check, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { createFactBase, createFactEntry, deleteFactEntry, getFactBase, setFactEntryApproval } from "@/server/facts";
+import { createFactBase, createFactEntry, deleteFactEntry, getFactBase, setFactEntryApproval, syncFactsFromBundle } from "@/server/facts";
 import { FACT_FIELD_LABELS as FIELD_LABELS } from "@/shared/fact-fields";
 
 export const Route = createFileRoute("/_authed/facts")({
@@ -65,11 +65,57 @@ function FactsPage() {
 				<CreateBaseCard brandId={brand.id} brandName={brand.name} onDone={() => router.invalidate()} />
 			) : (
 				<>
-					<AddEntryCard factBaseId={factBase.base.id} onDone={() => router.invalidate()} />
-					<EntryList entries={factBase.entries} onChange={() => router.invalidate()} />
+					{factBase.bundleMode ? (
+						<BundleBanner brandId={brand.id} onDone={() => router.invalidate()} />
+					) : (
+						<AddEntryCard factBaseId={factBase.base.id} onDone={() => router.invalidate()} />
+					)}
+					<EntryList entries={factBase.entries} readOnly={factBase.bundleMode} onChange={() => router.invalidate()} />
 				</>
 			)}
 		</div>
+	);
+}
+
+function BundleBanner({ brandId, onDone }: { brandId: string; onDone: () => void }) {
+	const [busy, setBusy] = useState(false);
+	const [report, setReport] = useState<string | null>(null);
+	const [error, setError] = useState<string | null>(null);
+
+	return (
+		<Card className="mb-6">
+			<CardHeader>
+				<CardTitle className="text-base">事实源：bundle（git）</CardTitle>
+				<CardDescription>
+					此页为只读视图。事实在 bundle 仓库的 facts/ 目录中编辑（markdown），提交后点同步拉入。单向环流：git 写、这里读。
+				</CardDescription>
+			</CardHeader>
+			<CardContent className="space-y-3">
+				<Button
+					disabled={busy}
+					onClick={async () => {
+						setBusy(true);
+						setError(null);
+						try {
+							const r = await syncFactsFromBundle({ data: { brandId } });
+							setReport(
+								`新增 ${r.inserted} · 更新 ${r.updated} · 未变 ${r.unchanged}` +
+									(r.dbOnly.length ? ` · 仅存在于数据库 ${r.dbOnly.length} 条（未删除）` : ""),
+							);
+							onDone();
+						} catch (e) {
+							setError(e instanceof Error ? e.message : String(e));
+						} finally {
+							setBusy(false);
+						}
+					}}
+				>
+					{busy ? "同步中…" : "从 bundle 同步"}
+				</Button>
+				{report && <p className="text-muted-foreground text-xs">{report}</p>}
+				{error && <p className="text-destructive text-xs">{error}</p>}
+			</CardContent>
+		</Card>
 	);
 }
 
@@ -223,7 +269,7 @@ type Entry = {
 	approved: boolean;
 };
 
-function EntryList({ entries, onChange }: { entries: Entry[]; onChange: () => void }) {
+function EntryList({ entries, readOnly, onChange }: { entries: Entry[]; readOnly: boolean; onChange: () => void }) {
 	if (entries.length === 0) {
 		return (
 			<p className="text-muted-foreground text-sm">还没有条目。至少写满产品、特点、信任背书三类，生成才有东西可引。</p>
@@ -246,7 +292,7 @@ function EntryList({ entries, onChange }: { entries: Entry[]; onChange: () => vo
 					</h2>
 					<div className="divide-y rounded-lg border">
 						{items.map((entry) => (
-							<EntryRow key={entry.id} entry={entry} onChange={onChange} />
+							<EntryRow key={entry.id} entry={entry} readOnly={readOnly} onChange={onChange} />
 						))}
 					</div>
 				</section>
@@ -255,7 +301,7 @@ function EntryList({ entries, onChange }: { entries: Entry[]; onChange: () => vo
 	);
 }
 
-function EntryRow({ entry, onChange }: { entry: Entry; onChange: () => void }) {
+function EntryRow({ entry, readOnly, onChange }: { entry: Entry; readOnly: boolean; onChange: () => void }) {
 	const expired = entry.validUntil ? new Date(entry.validUntil) < new Date() : false;
 
 	return (
@@ -279,7 +325,7 @@ function EntryRow({ entry, onChange }: { entry: Entry; onChange: () => void }) {
 					)}
 				</div>
 			</div>
-			<div className="flex shrink-0 gap-1">
+			<div className="flex shrink-0 gap-1" style={readOnly ? { display: "none" } : undefined}>
 				<Button
 					variant="ghost"
 					size="icon"

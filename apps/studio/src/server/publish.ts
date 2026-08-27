@@ -4,7 +4,7 @@ import { citations } from "@workspace/lib/db/schema";
 import { contentDrafts, draftFactCitations, factEntries, publishRecords } from "@workspace/studio/schema";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
-import { requireBrand, requireSession } from "./tenant";
+import { requireBrand, requireSession } from "./guards";
 
 /**
  * Publishing, and then finding out whether it mattered.

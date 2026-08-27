@@ -3,27 +3,14 @@ import { db } from "@workspace/lib/db/db";
 import { factBases, factEntries } from "@workspace/studio/schema";
 import { and, asc, eq } from "drizzle-orm";
 import { z } from "zod";
-import { requireBrand, requireSession } from "./tenant";
+import { FACT_FIELDS } from "@/shared/fact-fields";
+import { requireBrand, requireSession } from "./guards";
 
 /**
  * The fact base is the only source a draft may assert from, so these handlers
  * are deliberately boring: no inference, no enrichment, no "helpful" defaults.
  * Everything here is something a person typed and can be held to.
  */
-
-export const FACT_FIELDS = [
-	"product_service",
-	"product_feature",
-	"brand_story",
-	"user_pain",
-	"trust_credential",
-	"customer_case",
-	"capacity",
-	"certification",
-	"lead_time",
-	"pricing_basis",
-	"other",
-] as const;
 
 const fieldSchema = z.enum(FACT_FIELDS);
 

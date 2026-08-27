@@ -3,7 +3,7 @@ import { db } from "@workspace/lib/db/db";
 import { assets } from "@workspace/studio/schema";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
-import { requireBrand, requireSession } from "./tenant";
+import { requireBrand, requireSession } from "./guards";
 
 /** Assets are referenced by URL, not copied. The brand already hosts them, and
  *  a second copy goes stale the moment they replace one. */

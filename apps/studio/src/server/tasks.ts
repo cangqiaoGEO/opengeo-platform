@@ -11,7 +11,7 @@ import {
 import { and, count, desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { generateDraft } from "./generate";
-import { requireBrand, requireSession } from "./tenant";
+import { requireBrand, requireSession } from "./guards";
 
 /**
  * A task is a batch of drafts against a set of tracked prompts. Drafts are

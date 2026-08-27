@@ -3,7 +3,7 @@ import { db } from "@workspace/lib/db/db";
 import { contentDrafts, draftFactCitations, factEntries, reviewActions } from "@workspace/studio/schema";
 import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
-import { requireBrand, requireSession } from "./tenant";
+import { requireBrand, requireSession } from "./guards";
 
 /**
  * Review is the last place a person stands behind what goes out. Every decision

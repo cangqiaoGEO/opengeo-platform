@@ -8,20 +8,7 @@ import { Textarea } from "@workspace/ui/components/textarea";
 import { Check, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { createFactBase, createFactEntry, deleteFactEntry, getFactBase, setFactEntryApproval } from "@/server/facts";
-
-const FIELD_LABELS: Record<string, string> = {
-	product_service: "产品与服务",
-	product_feature: "产品特点",
-	brand_story: "品牌故事",
-	user_pain: "用户痛点",
-	trust_credential: "信任背书",
-	customer_case: "客户案例",
-	capacity: "产能",
-	certification: "认证",
-	lead_time: "交期",
-	pricing_basis: "价格构成",
-	other: "其他",
-};
+import { FACT_FIELD_LABELS as FIELD_LABELS } from "@/shared/fact-fields";
 
 export const Route = createFileRoute("/_authed/facts")({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -255,7 +242,7 @@ function EntryList({ entries, onChange }: { entries: Entry[]; onChange: () => vo
 			{Object.entries(grouped).map(([field, items]) => (
 				<section key={field}>
 					<h2 className="text-muted-foreground mb-2 font-mono text-xs tracking-widest uppercase">
-						{FIELD_LABELS[field] ?? field}
+						{FIELD_LABELS[field as keyof typeof FIELD_LABELS] ?? field}
 					</h2>
 					<div className="divide-y rounded-lg border">
 						{items.map((entry) => (

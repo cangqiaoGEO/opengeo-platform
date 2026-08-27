@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedRouteImport } from './routes/_authed'
+import { Route as AuthedDraftsRouteImport } from './routes/_authed/drafts'
 import { Route as AuthedFactsRouteImport } from './routes/_authed/facts'
+import { Route as AuthedTasksRouteImport } from './routes/_authed/tasks'
+import { Route as AuthedTemplatesRouteImport } from './routes/_authed/templates'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,32 +25,63 @@ const AuthedRoute = AuthedRouteImport.update({
   id: '/_authed',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedDraftsRoute = AuthedDraftsRouteImport.update({
+  id: '/drafts',
+  path: '/drafts',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedFactsRoute = AuthedFactsRouteImport.update({
   id: '/facts',
   path: '/facts',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedTasksRoute = AuthedTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedTemplatesRoute = AuthedTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AuthedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/drafts': typeof AuthedDraftsRoute
   '/facts': typeof AuthedFactsRoute
+  '/tasks': typeof AuthedTasksRoute
+  '/templates': typeof AuthedTemplatesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/drafts': typeof AuthedDraftsRoute
   '/facts': typeof AuthedFactsRoute
+  '/tasks': typeof AuthedTasksRoute
+  '/templates': typeof AuthedTemplatesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
+  '/_authed/drafts': typeof AuthedDraftsRoute
   '/_authed/facts': typeof AuthedFactsRoute
+  '/_authed/tasks': typeof AuthedTasksRoute
+  '/_authed/templates': typeof AuthedTemplatesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/facts'
+  fullPaths: '/' | '/drafts' | '/facts' | '/tasks' | '/templates'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/facts'
-  id: '__root__' | '/' | '/_authed' | '/_authed/facts'
+  to: '/' | '/drafts' | '/facts' | '/tasks' | '/templates'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authed'
+    | '/_authed/drafts'
+    | '/_authed/facts'
+    | '/_authed/tasks'
+    | '/_authed/templates'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -71,6 +105,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/drafts': {
+      id: '/_authed/drafts'
+      path: '/drafts'
+      fullPath: '/drafts'
+      preLoaderRoute: typeof AuthedDraftsRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/facts': {
       id: '/_authed/facts'
       path: '/facts'
@@ -78,15 +119,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedFactsRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/tasks': {
+      id: '/_authed/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof AuthedTasksRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/templates': {
+      id: '/_authed/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof AuthedTemplatesRouteImport
+      parentRoute: typeof AuthedRoute
+    }
   }
 }
 
 interface AuthedRouteChildren {
+  AuthedDraftsRoute: typeof AuthedDraftsRoute
   AuthedFactsRoute: typeof AuthedFactsRoute
+  AuthedTasksRoute: typeof AuthedTasksRoute
+  AuthedTemplatesRoute: typeof AuthedTemplatesRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
+  AuthedDraftsRoute: AuthedDraftsRoute,
   AuthedFactsRoute: AuthedFactsRoute,
+  AuthedTasksRoute: AuthedTasksRoute,
+  AuthedTemplatesRoute: AuthedTemplatesRoute,
 }
 
 const AuthedRouteWithChildren =

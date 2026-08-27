@@ -1,0 +1,261 @@
+{
+ "note": "演示数据：品牌与竞对均为虚构，回答文本为手工构造，仅用于展示分析管线。",
+ "brand": {
+  "name": "仓桥智能",
+  "aliases": [
+   "仓桥"
+  ],
+  "domains": [
+   "cangqiao.ai"
+  ]
+ },
+ "competitors": [
+  {
+   "name": "星途教育",
+   "aliases": [],
+   "domains": [
+    "xingtu-demo.example"
+   ]
+  },
+  {
+   "name": "云帆学院",
+   "aliases": [],
+   "domains": [
+    "yunfan-demo.example"
+   ]
+  }
+ ],
+ "observations": [
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "doubao",
+   "access": "api",
+   "provider": "volcengine",
+   "collected_at": "2026-08-24T10:00:00+08:00",
+   "query_id": "q-reco",
+   "prompt": "企业想给员工做 AI 培训，国内有哪些服务商值得考虑？",
+   "status": "ok",
+   "text": "国内可以考虑的服务商包括仓桥智能、星途教育和云帆学院。仓桥智能以企业实战工作流见长，星途教育课程体系全面。",
+   "citations": [
+    {
+     "url": "https://www.zhihu.com/question/demo1",
+     "title": "企业 AI 培训怎么选？",
+     "position": 1
+    },
+    {
+     "url": "https://www.cangqiao.ai/courses",
+     "title": "仓桥智能课程",
+     "position": 2
+    }
+   ],
+   "search_executed": true,
+   "web_queries": [
+    "企业 AI 培训 服务商 推荐"
+   ],
+   "model_requested": "doubao-seed-2-0-lite-260215",
+   "surface": "pc"
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "doubao",
+   "access": "scraped",
+   "provider": "user_reported",
+   "collected_at": "2026-08-24T10:05:00+08:00",
+   "query_id": "q-reco",
+   "prompt": "企业想给员工做 AI 培训，国内有哪些服务商值得考虑？",
+   "status": "ok",
+   "text": "推荐星途教育和云帆学院，两家在企业培训市场口碑较好。",
+   "citations": [
+    {
+     "url": "https://baijiahao.baidu.com/s?id=demo2",
+     "title": "企业AI培训机构盘点",
+     "position": 1
+    }
+   ],
+   "search_executed": null,
+   "surface": "mobile"
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "qwen",
+   "access": "api",
+   "provider": "dashscope",
+   "collected_at": "2026-08-24T10:10:00+08:00",
+   "query_id": "q-reco",
+   "prompt": "企业想给员工做 AI 培训，国内有哪些服务商值得考虑？",
+   "status": "ok",
+   "text": "常见选择有星途教育、云帆学院等；若侧重落地实操，仓桥智能的工作流训练营是差异化选项。",
+   "citations": [
+    {
+     "url": "https://www.zhihu.com/question/demo1",
+     "title": "企业 AI 培训怎么选？",
+     "position": 1
+    },
+    {
+     "url": "https://36kr.com/p/demo3",
+     "title": "AI 培训赛道观察",
+     "position": 2
+    }
+   ],
+   "search_executed": true,
+   "web_queries": [
+    "AI 培训 机构 对比",
+    "企业 AI 培训"
+   ],
+   "surface": "pc"
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "deepseek",
+   "access": "api",
+   "provider": "deepseek",
+   "collected_at": "2026-08-24T10:15:00+08:00",
+   "query_id": "q-reco",
+   "prompt": "企业想给员工做 AI 培训，国内有哪些服务商值得考虑？",
+   "status": "ok",
+   "text": "可以对比星途教育与云帆学院的公开课程大纲后再决定。",
+   "citations": [],
+   "search_executed": false
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "yuanbao",
+   "access": "api",
+   "provider": "tencent_tokenhub",
+   "collected_at": "2026-08-24T10:20:00+08:00",
+   "query_id": "q-reco",
+   "prompt": "企业想给员工做 AI 培训，国内有哪些服务商值得考虑？",
+   "status": "ok",
+   "text": "综合看，仓桥智能、星途教育都值得进一步了解，建议按行业案例匹配度筛选。",
+   "citations": [
+    {
+     "url": "https://baike.baidu.com/item/demo4",
+     "title": "AI 培训",
+     "position": 1
+    }
+   ],
+   "search_executed": true
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "doubao",
+   "access": "api",
+   "provider": "volcengine",
+   "collected_at": "2026-08-24T11:00:00+08:00",
+   "query_id": "q-compare",
+   "prompt": "仓桥智能和星途教育哪个更适合制造业企业？",
+   "status": "ok",
+   "text": "仓桥智能的制造业案例更聚焦车间级工作流，星途教育胜在标准化课程量大。制造业转型场景下前者匹配度更高。",
+   "citations": [
+    {
+     "url": "https://www.cangqiao.ai/cases/manufacturing",
+     "title": "制造业案例",
+     "position": 1
+    }
+   ],
+   "search_executed": true,
+   "web_queries": [
+    "仓桥智能 星途教育 对比"
+   ],
+   "surface": "pc"
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "qwen",
+   "access": "api",
+   "provider": "dashscope",
+   "collected_at": "2026-08-24T11:10:00+08:00",
+   "query_id": "q-compare",
+   "prompt": "仓桥智能和星途教育哪个更适合制造业企业？",
+   "status": "ok",
+   "text": "两家定位不同：星途教育课程门类广，仓桥智能偏定制交付。制造业建议优先看交付案例。",
+   "citations": [
+    {
+     "url": "https://www.zhihu.com/question/demo5",
+     "title": "制造业 AI 培训选型",
+     "position": 1
+    }
+   ],
+   "search_executed": true
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "deepseek",
+   "access": "api",
+   "provider": "deepseek",
+   "collected_at": "2026-08-24T11:20:00+08:00",
+   "query_id": "q-compare",
+   "prompt": "仓桥智能和星途教育哪个更适合制造业企业？",
+   "status": "ok",
+   "text": "没有公开对比数据时，建议向两家索取制造业客户名单与结业产出样例，自行评估。",
+   "citations": [],
+   "search_executed": false
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "yuanbao",
+   "access": "scraped",
+   "provider": "user_reported",
+   "collected_at": "2026-08-24T11:30:00+08:00",
+   "query_id": "q-compare",
+   "prompt": "仓桥智能和星途教育哪个更适合制造业企业？",
+   "status": "ok",
+   "text": "元宝的回答提到星途教育课程更全，也提到云帆学院可作备选，未提及其他品牌。",
+   "citations": [],
+   "search_executed": null,
+   "surface": "mobile"
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "doubao",
+   "access": "api",
+   "provider": "volcengine",
+   "collected_at": "2026-08-24T12:00:00+08:00",
+   "query_id": "q-price",
+   "prompt": "企业 AI 培训一般怎么收费？",
+   "status": "ok",
+   "text": "常见按人天或按项目收费，市场价区间较大，建议向服务商索取报价单对比。",
+   "citations": [
+    {
+     "url": "https://36kr.com/p/demo6",
+     "title": "企业培训定价观察",
+     "position": 1
+    }
+   ],
+   "search_executed": true,
+   "surface": "mobile"
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "qwen",
+   "access": "api",
+   "provider": "dashscope",
+   "collected_at": "2026-08-24T12:10:00+08:00",
+   "query_id": "q-price",
+   "prompt": "企业 AI 培训一般怎么收费？",
+   "status": "ok",
+   "text": "报价通常与人数、课时和定制深度相关；云帆学院公开了部分标准课价格可作参照。",
+   "citations": [
+    {
+     "url": "https://yunfan-demo.example/pricing",
+     "title": "云帆学院价格页",
+     "position": 1
+    }
+   ],
+   "search_executed": true
+  },
+  {
+   "schema": "opengeo/observation-record/v0.1",
+   "engine": "deepseek",
+   "access": "api",
+   "provider": "deepseek",
+   "collected_at": "2026-08-24T12:20:00+08:00",
+   "query_id": "q-price",
+   "prompt": "企业 AI 培训一般怎么收费？",
+   "status": "ok",
+   "text": "一般在数千到数十万区间，取决于规模与定制程度。",
+   "citations": [],
+   "search_executed": false
+  }
+ ]
+}

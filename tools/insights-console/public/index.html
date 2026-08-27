@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenGEO Console</title>
+<style>
+:root{
+  --paper:#F6F8F5; --surface:#FFFFFF; --ink:#1C2622; --muted:#59685F;
+  --line:#D9E1DB; --accent:#0E6B5B; --accent-soft:#E3F0EB;
+  --amber:#A66A1E; --amber-soft:#F5EBDB; --red:#9C3A2E; --code:#EDF2EE;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#111815; --surface:#18211D; --ink:#E2EAE4; --muted:#93A399;
+    --line:#2B372F; --accent:#48BFA3; --accent-soft:#1B2E28;
+    --amber:#D99A4E; --amber-soft:#2E2619; --red:#E07B6B; --code:#1E2A24;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+header{display:flex;align-items:center;gap:1rem;padding:.9rem 1.4rem;border-bottom:2px solid var(--ink);background:var(--surface)}
+header h1{font-size:1.05rem;margin:0;letter-spacing:.02em}
+header h1 span{color:var(--accent)}
+#providers{display:flex;gap:.4rem;flex-wrap:wrap;margin-left:auto}
+.chip{font:11px/1 ui-monospace,monospace;padding:.35em .6em;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.chip.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+main{display:grid;grid-template-columns:340px 1fr;gap:1.2rem;padding:1.2rem 1.4rem;max-width:88rem;margin:0 auto}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);padding:1rem 1.1rem}
+.panel h2{font-size:.8rem;margin:0 0 .7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-family:ui-monospace,monospace;font-weight:500}
+label{display:block;font-size:.78rem;color:var(--muted);margin:.6rem 0 .15rem}
+input,textarea,select{width:100%;background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:.45em .6em;font:inherit;font-size:.88rem}
+textarea{resize:vertical}
+button{background:var(--accent);color:#fff;border:none;padding:.55em 1.1em;font:inherit;font-size:.88rem;cursor:pointer;font-weight:600}
+button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap}
+.bignums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.2rem}
+.big{background:var(--surface);border:1px solid var(--line);padding:.9rem 1rem}
+.big .v{font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums}
+.big .v small{font-size:.9rem;color:var(--muted);font-weight:400}
+.big .k{font-size:.75rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;font:11px/1.4 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:.5em .6em;border-bottom:2px solid var(--line);font-weight:500}
+td{padding:.5em .6em;border-bottom:1px solid var(--line);vertical-align:top}
+.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace}
+.bar{height:8px;background:var(--accent-soft);position:relative;min-width:80px}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--accent)}
+.tag{display:inline-block;font:10px/1 ui-monospace,monospace;border:1px solid var(--line);color:var(--muted);padding:.25em .5em;border-radius:3px;margin-right:.25rem}
+.tag.hit{border-color:var(--accent);color:var(--accent)}
+.tag.miss{border-color:var(--red);color:var(--red)}
+details{border:1px solid var(--line);margin:.4rem 0;background:var(--surface)}
+summary{padding:.55em .8em;cursor:pointer;font-size:.85rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+details .body{padding:.2em .9em .8em;font-size:.85rem;border-top:1px solid var(--line)}
+details .body p{white-space:pre-wrap;background:var(--code);padding:.6em .8em;margin:.5em 0}
+.cite{font-size:.8rem;color:var(--muted)}
+.cite a{color:var(--accent)}
+.warn{background:var(--amber-soft);border-left:3px solid var(--amber);padding:.5em .8em;font-size:.82rem;margin:.6rem 0}
+#results{display:none}
+.section{margin-bottom:1.4rem}
+.footer-note{font-size:.75rem;color:var(--muted);padding:0 1.4rem 1.4rem;max-width:88rem;margin:0 auto}
+</style>
+</head>
+<body>
+<header>
+  <h1>Open<span>GEO</span> Console <span style="font-size:.7rem;color:var(--muted);font-weight:400">L2 · 中外十六引擎可见度观测台</span></h1>
+  <div id="providers"></div>
+</header>
+<main>
+  <div>
+    <div class="panel">
+      <h2>品牌配置</h2>
+      <label>品牌名</label><input id="brand" placeholder="仓桥智能">
+      <label>别名（逗号分隔）</label><input id="aliases" placeholder="仓桥">
+      <label>自有域名（逗号分隔）</label><input id="domains" placeholder="cangqiao.ai">
+      <label>竞对（每行一个：名称[,域名]）</label>
+      <textarea id="competitors" rows="3" placeholder="星途教育,xingtu.example&#10;云帆学院"></textarea>
+      <div class="row">
+        <button id="loadDemo" class="ghost">载入演示数据</button>
+        <button id="runAnalyze">分析</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:1.2rem">
+      <h2>添加观测 · 粘贴回答（scraped 通道）</h2>
+      <label>引擎</label>
+      <select id="obsEngine"><optgroup label="中文 · API+粘贴"><option>doubao</option><option>qwen</option><option>deepseek</option><option>yuanbao</option><option>ernie</option><option>kimi</option><option>spark</option><option>zhipu</option></optgroup><optgroup label="中文 · 仅粘贴"><option>baidu-ai</option><option>quark-ai</option><option>nano-ai</option><option>douyin-ai</option></optgroup><optgroup label="国际"><option>chatgpt</option><option>gemini</option><option>perplexity</option><option>claude</option></optgroup></select>
+      <label>终端</label>
+      <select id="obsSurface"><option value="">未区分</option><option value="pc">PC</option><option value="mobile">移动</option></select>
+      <label>查询 ID</label><input id="obsQid" placeholder="q-reco">
+      <label>提问原文</label><input id="obsPrompt" placeholder="企业 AI 培训哪家好？">
+      <label>粘贴引擎回答全文</label><textarea id="obsText" rows="4"></textarea>
+      <div class="row"><button id="addObs" class="ghost">加入观测集</button></div>
+    </div>
+    <div class="panel" style="margin-top:1.2rem">
+      <h2>添加观测 · API 实测（api 通道）</h2>
+      <label>引擎</label>
+      <select id="apiEngine"><optgroup label="中文"><option>doubao</option><option>qwen</option><option>deepseek</option><option>yuanbao</option><option>ernie</option><option>kimi</option><option>spark</option><option>zhipu</option></optgroup><optgroup label="国际"><option>chatgpt</option><option>gemini</option><option>perplexity</option><option>claude</option></optgroup></select>
+      <label>查询 ID</label><input id="apiQid" placeholder="q-reco">
+      <label>提问</label><input id="apiPrompt" placeholder="企业 AI 培训哪家好？">
+      <div class="row"><button id="runCollect" class="ghost">调用采集</button></div>
+      <div id="collectMsg" class="warn" style="display:none"></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel" id="obsPanel">
+      <h2>观测集 <span id="obsCount" class="num"></span></h2>
+      <div id="emptyHint" style="color:var(--muted);font-size:.85rem">点「载入演示数据」立即体验，或通过左侧两种通道加入真实观测。</div>
+    </div>
+    <div id="results">
+      <div class="bignums" style="margin-top:1.2rem">
+        <div class="big"><div class="v" id="rVis">–</div><div class="k">总可见度（各引擎等权）</div></div>
+        <div class="big"><div class="v" id="rSov">–</div><div class="k" id="rSovK">竞对份额 SoV</div></div>
+        <div class="big"><div class="v" id="rObs">–</div><div class="k">有效观测数</div></div>
+        <div class="big"><div class="v" id="rCit">–</div><div class="k">结构化引用数（去重）</div></div>
+      </div>
+      <div class="panel section"><h2>分引擎可见度（通道与终端分列，不混算）</h2><table id="tEngines"></table></div>
+      <div class="panel section"><h2>竞对份额</h2><table id="tSov"></table><div id="sovNote" class="warn" style="display:none"></div></div>
+      <div class="panel section"><h2>引用来源画像</h2><table id="tCites"></table></div>
+      <div class="panel section"><h2>逐条观测</h2><div id="obsList"></div></div>
+    </div>
+  </div>
+</main>
+<p class="footer-note">指标口径：可见度与聚合语义见 opengeo-audit geo-metrics v2；SoV 见 RFC-0006；观测记录格式见 RFC-0005。演示数据中的品牌与竞对均为虚构。</p>
+<script>
+let observations = [];
+const $ = (id) => document.getElementById(id);
+
+async function api(path, body) {
+  const res = await fetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : undefined);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || res.status);
+  return data;
+}
+
+function brandConfig() {
+  const split = (v) => v.split(/[,，]/).map((s) => s.trim()).filter(Boolean);
+  return {
+    brand: { name: $("brand").value.trim(), aliases: split($("aliases").value), domains: split($("domains").value) },
+    competitors: $("competitors").value.split(/\n/).map((line) => {
+      const [name, ...domains] = line.split(/[,，]/).map((s) => s.trim()).filter(Boolean);
+      return name ? { name, aliases: [], domains } : null;
+    }).filter(Boolean),
+  };
+}
+
+function refreshObs() {
+  $("obsCount").textContent = observations.length ? `· ${observations.length} 条` : "";
+  $("emptyHint").style.display = observations.length ? "none" : "block";
+}
+
+async function loadStatus() {
+  const { providers } = await api("/api/status");
+  $("providers").innerHTML = providers.map((p) =>
+    `<span class="chip ${p.configured ? "on" : ""}" title="${p.name} · ${p.access}">${p.id}${p.configured ? " ✓" : ""}</span>`).join("");
+}
+
+$("loadDemo").onclick = async () => {
+  const demo = await api("/api/demo");
+  $("brand").value = demo.brand.name;
+  $("aliases").value = demo.brand.aliases.join(",");
+  $("domains").value = demo.brand.domains.join(",");
+  $("competitors").value = demo.competitors.map((c) => [c.name, ...(c.domains || [])].join(",")).join("\n");
+  observations = demo.observations;
+  refreshObs();
+  runAnalyze();
+};
+
+$("addObs").onclick = async () => {
+  try {
+    const { records } = await api("/api/collect", {
+      engine: $("obsEngine").value, provider: "user_reported",
+      queries: [{ query_id: $("obsQid").value.trim() || "q-adhoc", prompt: $("obsPrompt").value.trim() || "（未填提问）" }],
+      text: $("obsText").value,
+      surface: $("obsSurface").value || undefined,
+    });
+    observations.push(...records); $("obsText").value = ""; refreshObs(); runAnalyze();
+  } catch (e) { alert(e.message); }
+};
+
+$("runCollect").onclick = async () => {
+  const msg = $("collectMsg"); msg.style.display = "block"; msg.textContent = "采集中…（真实调用官方 API）";
+  try {
+    const { records } = await api("/api/collect", {
+      engine: $("apiEngine").value,
+      queries: [{ query_id: $("apiQid").value.trim() || "q-adhoc", prompt: $("apiPrompt").value.trim() }],
+    });
+    observations.push(...records);
+    msg.textContent = `已采集 ${records.length} 条（status: ${records.map((r) => r.status).join(",")}）`;
+    refreshObs(); runAnalyze();
+  } catch (e) { msg.textContent = "采集失败：" + e.message; }
+};
+
+async function runAnalyze() {
+  if (!observations.length) return;
+  const cfg = brandConfig();
+  if (!cfg.brand.name) { alert("请先填品牌名"); return; }
+  const r = await api("/api/analyze", { ...cfg, observations });
+  $("results").style.display = "block";
+  $("rVis").innerHTML = r.overall_visibility === null ? "–" : r.overall_visibility + "<small>%</small>";
+  const sov = r.sov[r.sov.primary_access];
+  $("rSovK").textContent = `竞对份额 SoV（${r.sov.primary_access} 通道）`;
+  if (sov.status === "measured") { $("rSov").innerHTML = sov.overall_sov === null ? "无人被提及" : sov.overall_sov + "<small>%</small>"; $("sovNote").style.display = "none"; }
+  else { $("rSov").textContent = "样本不足"; $("sovNote").style.display = "block"; $("sovNote").textContent = sov.reason; }
+  $("rObs").textContent = r.observation_count;
+  $("rCit").textContent = r.citations.total;
+
+  const cell = (g) => `<td class="num">${g ? g.visibility + "% (" + g.observations + ")" : "–"}</td>`;
+  $("tEngines").innerHTML = "<tr><th>引擎</th><th>观测</th><th>可见度</th><th></th><th>scraped</th><th>api</th><th>PC</th><th>移动</th></tr>" +
+    r.per_engine.map((e) => `<tr><td>${e.engine}</td><td class="num">${e.observations}</td><td class="num">${e.visibility ?? "–"}%</td><td><div class="bar"><i style="width:${e.visibility ?? 0}%"></i></div></td>` +
+      ["scraped", "api"].map((a) => cell(e.by_access[a])).join("") +
+      ["pc", "mobile"].map((sf) => cell(e.by_surface[sf])).join("") + "</tr>").join("");
+
+  const rows = sov.status === "measured"
+    ? [[cfg.brand.name + "（本品牌）", sov.overall_sov]].concat(sov.competitor_sovs.map((c) => [c.name, c.sov]))
+    : [];
+  $("tSov").innerHTML = rows.length
+    ? "<tr><th>品牌</th><th>份额</th><th></th></tr>" + rows.map(([n, v]) => `<tr><td>${n}</td><td class="num">${v ?? "–"}%</td><td><div class="bar"><i style="width:${v ?? 0}%"></i></div></td></tr>`).join("")
+    : "";
+
+  $("tCites").innerHTML = "<tr><th>类别</th><th>数量</th></tr>" +
+    Object.entries(r.citations.by_category).filter(([, v]) => v).map(([k, v]) => `<tr><td>${{ own: "自有源", competitor: "竞对源", institutional: "机构权威", social: "社媒/UGC", other: "其他", invalid: "无效" }[k]}</td><td class="num">${v}</td></tr>`).join("") +
+    (r.citations.top_domains.length ? "<tr><th style='padding-top:1em'>Top 域名</th><th></th></tr>" + r.citations.top_domains.slice(0, 8).map((d) => `<tr><td>${d.domain}</td><td class="num">${d.count}</td></tr>`).join("") : "");
+
+  $("obsList").innerHTML = r.per_observation.map((o) => `
+    <details><summary>
+      <span class="tag">${o.engine}</span><span class="tag">${o.access}</span>${o.surface ? `<span class="tag">${o.surface === "mobile" ? "移动" : "PC"}</span>` : ""}<span class="num">${o.query_id}</span>
+      <span class="tag ${o.brand_mentioned ? "hit" : "miss"}">${o.brand_mentioned ? "提及品牌" : "未提及"}</span>
+      ${o.competitors_mentioned.map((c) => `<span class="tag">${c}</span>`).join("")}
+    </summary><div class="body">
+      <p>${o.text.replace(/</g, "&lt;")}</p>
+      ${o.web_queries.length ? `<div class="cite">fan-out：${o.web_queries.join(" · ")}</div>` : ""}
+      ${o.citations.length ? `<div class="cite">引用：${o.citations.map((c) => `<a href="${c.url}" target="_blank" rel="noreferrer">${c.title || c.url}</a>`).join(" · ")}</div>` : ""}
+    </div></details>`).join("");
+}
+$("runAnalyze").onclick = runAnalyze;
+loadStatus();
+</script>
+</body>
+</html>

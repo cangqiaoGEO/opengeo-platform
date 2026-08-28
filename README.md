@@ -57,7 +57,7 @@ OpenGEO Platform 追踪 AI 答案引擎——ChatGPT、Perplexity、Gemini、Cop
 
 ## 与上游的关系
 
-本仓库是 [elmohq/elmo](https://github.com/elmohq/elmo)（MIT, Copyright © 2026 Blue Whale Software, LLC）的分叉，采用 **fork-and-diverge** 策略：锁定分叉点自主演进，不承诺跟随上游功能，`upstream` remote 保留用于按需 cherry-pick 修复。上游 LICENSE 与版权声明按 MIT 要求完整保留。
+本项目的代码基始于 [elmohq/elmo](https://github.com/elmohq/elmo)（MIT, Copyright © 2026 Blue Whale Software, LLC），自 2026-08-28 起**完全自主演进**，不再跟随上游。上游 LICENSE 与版权声明按 MIT 要求完整保留；fork 阶段的提交与 PR 历史存档于 [opengeo-platform-elmo-fork-archive](https://github.com/cangqiaoGEO/opengeo-platform-elmo-fork-archive)。
 
 分叉后新增的部分记录在 [OPENGEO.md](OPENGEO.md)。
 

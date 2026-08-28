@@ -35,25 +35,17 @@ Do not routinely run formatting, linting, type checks, or tests after making cha
 - Add tests for the purpose and externally observable behavior of the code, not its implementation shape. Do not test that internal helpers, component structure, configuration objects, or incidental markup have a particular form unless that form is itself a supported contract.
 - Prefer tests that exercise a user outcome, public API, business rule, failure mode, or regression. A refactor that preserves behavior should not require test changes.
 
-## Studio boundary
+## Module boundaries
 
-`apps/studio` and `packages/studio` are OpenGEO Studio — content production and distribution, a
-different product from the visibility tracking in `apps/web`. This repo is a fork of elmo and still
-cherry-picks upstream fixes, so Studio earns its place here by being **purely additive**: a conflict
-can only happen in a file both sides edit, and Studio edits none of theirs.
+自 2026-08-28 起本仓**自主演进**，不再跟随 elmo 上游（历史 fork 存档于
+`opengeo-platform-elmo-fork-archive`）。原先为 cherry-pick 服务的"纯增"红线随之解除：
+`apps/web`、`packages/lib`、根 `turbo.json` 都可以修改。保留下来的是模块纪律，不是禁令：
 
-| Studio may | Studio must not |
-| --- | --- |
-| Add files under `apps/studio` / `packages/studio` | Edit anything under `apps/web` |
-| Import `@workspace/lib` (auth schema, secrets, providers) read-only | Edit `packages/lib/src/db/schema.ts` or its migrations |
-| Import `@workspace/ui` components read-only | Add Studio-only components to `packages/ui` — put them in `apps/studio/src/components` |
-| Declare tasks and env in `apps/studio/turbo.json` | Edit the root `turbo.json` |
-| Validate its own env inside `packages/studio` | Add Studio vars to `packages/config/src/env-registry.ts` |
-
-Studio owns its schema and migration chain (`packages/studio/drizzle.studio.config.ts`, journal table
-`__drizzle_migrations_studio`), so its tables never enter `packages/lib`'s migration numbering. The
-copied theme tokens in `apps/studio/src/styles.css` are the deliberate price of this rule — keep them
-in sync by hand when the platform's tokens move.
+- Studio（`apps/studio` / `packages/studio`）与监测台（`apps/web`）仍是两个产品面，跨界改动要说明理由。
+- Studio 保有自己的 schema 与迁移链（`packages/studio/drizzle.studio.config.ts`，journal 表
+  `__drizzle_migrations_studio`），与 `packages/lib` 的迁移编号互不进入——这是好的隔离，与 fork 无关，保留。
+- 共享组件放 `packages/ui`，产品特有组件放各自 app；env 归 `packages/config/src/env-registry.ts` 统一注册（现在可以加了）。
+- `apps/studio/src/styles.css` 里复制的主题 token 可以逐步改回直接引用平台 token。
 
 ## Package management and supply-chain security
 

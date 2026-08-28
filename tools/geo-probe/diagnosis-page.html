@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 可见度真测 · OpenGEO</title>
+<meta name="description" content="不是问卷——把你的品牌放进豆包、DeepSeek、千问、Kimi 的真实回答里测一次：AI 提没提你、认不认识你，原文为证。">
+<style>
+  :root{
+    --paper:#f7f6f2; --card:#ffffff; --ink:#23262b; --ink2:#565b64; --ink3:#8a8f99;
+    --line:#e3e1da; --indigo:#2c4a6e; --indigo-soft:#e8eef5; --seal:#a63c2e;
+    --ok:#3d6b4f; --ok-soft:#e6efe9; --warn:#946018; --warn-soft:#f5eddd; --bad:#a63c2e; --bad-soft:#f6e9e6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#191b1f; --card:#22252b; --ink:#e6e4de; --ink2:#a8acb4; --ink3:#767b85;
+      --line:#33373f; --indigo:#8fb0d4; --indigo-soft:#26303d; --seal:#d4796b;
+      --ok:#84b295; --ok-soft:#243129; --warn:#c99a53; --warn-soft:#352c1d; --bad:#d4796b; --bad-soft:#3a2723;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;line-height:1.8}
+  .wrap{max-width:46rem;margin:0 auto;padding:3rem 1.2rem 5rem}
+  h1{font-size:1.9rem;line-height:1.3;margin:.3rem 0 .6rem}
+  .eyebrow{font-size:.72rem;letter-spacing:.2em;color:var(--indigo);font-family:ui-monospace,monospace}
+  .lede{color:var(--ink2)}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.3rem 1.4rem;margin:1.4rem 0}
+  label{display:block;font-size:.85rem;color:var(--ink2);margin:.8rem 0 .3rem}
+  input{width:100%;padding:.7rem .9rem;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font-size:1rem}
+  input:focus{outline:2px solid var(--indigo);border-color:transparent}
+  button{background:var(--indigo);color:#fff;border:0;border-radius:8px;padding:.85rem 1.6rem;font-size:1rem;cursor:pointer;margin-top:1.1rem}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .hint{font-size:.78rem;color:var(--ink3)}
+  #status{display:none;text-align:center;padding:2rem 1rem}
+  .spin{display:inline-block;width:1.4rem;height:1.4rem;border:3px solid var(--line);border-top-color:var(--indigo);border-radius:50%;animation:r 1s linear infinite;vertical-align:middle;margin-right:.6rem}
+  @keyframes r{to{transform:rotate(360deg)}}
+  #results{display:none}
+  .sum{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.2rem 1.4rem;text-align:center;margin:1rem 0}
+  .sum b{font-size:2.2rem}
+  .engine{margin:1.3rem 0 .4rem;font-weight:600}
+  .qa{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.9rem 1.1rem;margin:.6rem 0}
+  .qa .k{font-size:.72rem;color:var(--ink3);font-family:ui-monospace,monospace}
+  .qa .q{font-size:.88rem;color:var(--ink2);margin:.2rem 0 .5rem}
+  .qa .a{font-size:.88rem;white-space:pre-wrap;border-left:3px solid var(--line);padding-left:.8rem;color:var(--ink)}
+  .v{display:inline-block;font-size:.75rem;padding:.1rem .6rem;border-radius:999px;margin-left:.5rem;vertical-align:middle}
+  .v.ok{background:var(--ok-soft);color:var(--ok)} .v.bad{background:var(--bad-soft);color:var(--bad)} .v.warn{background:var(--warn-soft);color:var(--warn)}
+  .cta{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--seal);border-radius:0 8px 8px 0;padding:1.1rem 1.3rem;margin-top:1.6rem;font-size:.92rem}
+  .cta a{color:var(--indigo)}
+  .err{color:var(--bad);font-size:.9rem;margin-top:.8rem}
+  .charter{font-size:.8rem;color:var(--ink3);margin-top:2.5rem;border-top:1px solid var(--line);padding-top:1rem}
+  footer{margin-top:2rem;font-size:.78rem;color:var(--ink3)}
+  footer a{color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">OPENGEO · 免费真测</div>
+  <h1>你的品牌，AI 会推荐吗？<br>真测一次，原文为证。</h1>
+  <p class="lede">不是问卷自评——提交后，系统用<b>真实的 AI 引擎（DeepSeek / 千问 / 豆包 / Kimi 网页版）</b>现场问三类买家问题：品类推荐里提没提你、直接问你它认不认识、和同行比它怎么说。回答原文直接贴给你看。</p>
+
+  <div class="panel" id="form">
+    <label for="brand">品牌名</label>
+    <input id="brand" maxlength="60" placeholder="如：PandaSofa">
+    <label for="category">所在品类（AI 会拿它来问推荐）</label>
+    <input id="category" maxlength="60" placeholder="如：功能沙发出口厂家 / 少儿编程 / 医美连锁">
+    <button id="go">开始真测（约 2–5 分钟）</button>
+    <p class="hint">每 IP 每天 3 次 · 测试用自有账号低频进行，队列串行 · 同品牌当日结果复用</p>
+    <p class="err" id="formErr"></p>
+  </div>
+
+  <div id="status" class="panel">
+    <span class="spin"></span><span id="statusText">排队中…</span>
+    <p class="hint" id="queueHint"></p>
+  </div>
+
+  <div id="results">
+    <div class="sum"><span style="font-size:.8rem;color:var(--ink3)">品类推荐问题中的真实出现率</span><br><b id="visScore">–</b><p class="hint" id="sumHint"></p></div>
+    <div id="cards"></div>
+    <div class="cta">
+      <b>这只是 3 问 × 4 引擎的抽样。</b>完整实测是 20+ 问 × 六引擎 × 周期复测：SoV、引用来源、错误归因、六维诊断分，全部可审计。
+      <br>→ 方法全开源：<a href="https://github.com/cangqiaoGEO" target="_blank" rel="noreferrer">github.com/cangqiaoGEO</a>
+      <br>→ 想要完整版：在任一仓库开 Issue 留下行业与官网，我们排期。
+    </div>
+  </div>
+
+  <p class="charter">口径宪章：不承诺排名第一 · 不承诺被所有 AI 推荐 · 不承诺统一见效天数。只承诺诊断分数、改进清单、复测对比。本页为轻量抽样，判定规则开源可查。</p>
+  <footer>OpenGEO · 杭州仓桥智能科技 · <a href="https://github.com/cangqiaoGEO/opengeo-spec/blob/main/METRICS.md" target="_blank" rel="noreferrer">指标宪章</a></footer>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let pollTimer = null;
+
+$("go").addEventListener("click", async () => {
+  const brand = $("brand").value.trim(), category = $("category").value.trim();
+  $("formErr").textContent = "";
+  if (!brand || !category) { $("formErr").textContent = "品牌名和品类都要填"; return; }
+  $("go").disabled = true;
+  try {
+    const res = await fetch("/api/probe", { method: "POST", headers: {"content-type":"application/json"}, body: JSON.stringify({ brand, category }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || res.status);
+    $("form").style.display = "none";
+    $("status").style.display = "block";
+    poll(data.id, brand);
+  } catch (e) {
+    $("formErr").textContent = String(e.message || e);
+    $("go").disabled = false;
+  }
+});
+
+function poll(id, brand) {
+  const tick = async () => {
+    try {
+      const res = await fetch("/api/probe/" + id);
+      const p = await res.json();
+      if (p.status === "queued") {
+        $("statusText").textContent = "排队中…";
+        $("queueHint").textContent = p.queueAhead > 0 ? `前面还有 ${p.queueAhead} 个任务` : "测试端串行执行，请稍候（页面可保持打开）";
+      } else if (p.status === "running") {
+        $("statusText").textContent = "正在逐个引擎提问…（约 2–5 分钟）";
+        $("queueHint").textContent = "真实网页版引擎逐条回答，比 API 慢，但这就是买家看到的答案";
+      } else if (p.status === "done") {
+        clearInterval(pollTimer); render(p);
+      } else if (p.status === "failed") {
+        clearInterval(pollTimer);
+        $("statusText").textContent = "测试端暂时不可用，请稍后再试或在 GitHub 开 Issue 联系我们";
+        document.querySelector(".spin").style.display = "none";
+      }
+    } catch {}
+  };
+  tick(); pollTimer = setInterval(tick, 5000);
+}
+
+function render(p) {
+  $("status").style.display = "none";
+  $("results").style.display = "block";
+  const rs = p.results || [];
+  const vis = rs.filter(r => r.kind === "品类推荐" && !r.error);
+  const hit = vis.filter(r => r.mentioned).length;
+  $("visScore").textContent = vis.length ? `${hit} / ${vis.length}` : "–";
+  $("sumHint").textContent = vis.length
+    ? (hit === 0 ? "各引擎的品类推荐里都没有你——典型的 L1–L3 缺席，买家问『买什么好』时你不在牌桌上。"
+       : hit < vis.length ? "部分引擎提到了你——阵地不稳，逐引擎看下面的原文。"
+       : "推荐问题全部提及——重点转向守住位置与压制竞品。")
+    : "推荐类问题未能完成，见下方明细。";
+  const byEngine = {};
+  for (const r of rs) (byEngine[r.engine] ??= []).push(r);
+  $("cards").innerHTML = Object.entries(byEngine).map(([eng, list]) => `
+    <div class="engine">${eng}</div>
+    ${list.map(r => `
+      <div class="qa">
+        <span class="k">${r.kind}</span>
+        ${r.error ? `<span class="v warn">未完成</span>` : `<span class="v ${r.kind==="品类推荐" ? (r.mentioned?"ok":"bad") : (r.verdict==="有认知"?"ok":"bad")}">${r.error ? "" : r.verdict}</span>`}
+        <p class="q">${esc(r.question)}</p>
+        ${r.error ? `<p class="hint">引擎暂不可用：${esc(r.error)}</p>` : `<div class="a">${esc(r.excerpt)}${r.excerpt.length >= 400 ? "…" : ""}</div>`}
+      </div>`).join("")}`).join("");
+}
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+</script>
+</body>
+</html>

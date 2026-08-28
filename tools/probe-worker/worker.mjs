@@ -18,11 +18,10 @@ const GATEWAY = process.env.GATEWAY || "http://localhost:3001";
 const GATEWAY_KEY = process.env.GATEWAY_KEY || "";
 if (!TOKEN) throw new Error("需要 PROBE_TOKEN");
 
+// v1 默认只挂已验证真答稳定的引擎；千问/Kimi/GLM 修复采集后经 ENGINES 扩展
 const DEFAULT_ENGINES = [
 	["deepseek-web/deepseek-chat", "DeepSeek"],
-	["qwen-cn-web/qwen3.5-plus", "千问"],
 	["doubao-web/doubao-seed-2.0", "豆包"],
-	["kimi-web/moonshot-v1-32k", "Kimi"],
 ];
 const ENGINES = process.env.ENGINES
 	? process.env.ENGINES.split(",").map((s) => [s.trim(), s.split("/")[0]])
@@ -44,7 +43,9 @@ function judgeAnswer(judge, brand, text) {
 	return { mentioned, verdict: "有认知" };
 }
 
-async function ask(model, prompt) {
+async function ask(model, prompt, sessionUser) {
+	// openclaw 网关约定：body.model 固定 "openclaw"，真实引擎经 x-openclaw-model 指定；
+	// 会话按 user 粘住，因此每问一个独立 user，避免上下文串味。
 	const ctrl = new AbortController();
 	const t = setTimeout(() => ctrl.abort(), 180e3);
 	try {
@@ -52,13 +53,21 @@ async function ask(model, prompt) {
 			method: "POST",
 			headers: {
 				"content-type": "application/json",
+				"x-openclaw-scopes": "operator.write",
+				"x-openclaw-model": model,
 				...(GATEWAY_KEY ? { authorization: `Bearer ${GATEWAY_KEY}` } : {}),
 			},
-			body: JSON.stringify({ model, messages: [{ role: "user", content: prompt }], stream: false }),
+			body: JSON.stringify({
+				model: "openclaw",
+				user: sessionUser,
+				messages: [{ role: "user", content: prompt }],
+				stream: false,
+			}),
 			signal: ctrl.signal,
 		});
 		if (!res.ok) throw new Error(`${model} HTTP ${res.status}`);
 		const data = await res.json();
+		if (data.error) throw new Error(data.error.message || "gateway error");
 		return data.choices?.[0]?.message?.content ?? "";
 	} finally {
 		clearTimeout(t);
@@ -73,7 +82,7 @@ async function runJob(job) {
 			let answer = "";
 			let error = null;
 			try {
-				answer = await ask(model, q);
+				answer = await ask(model, q, `probe-${job.id.slice(0, 8)}-${label}-${kind}`);
 			} catch (e) {
 				error = String(e.message || e);
 			}

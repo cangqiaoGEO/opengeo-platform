@@ -61,3 +61,14 @@ describe("diagnose", () => {
 		expect(ps).toEqual([...ps].sort((a, b) => ({ P0: 0, P1: 1, P2: 2 })[a] - ({ P0: 0, P1: 1, P2: 2 })[b]));
 	});
 });
+
+describe("renderDiagnosisHtml", () => {
+	it("emits radar svg, grade badge and one action row per item", async () => {
+		const { renderDiagnosisHtml } = await import("./diagnosis");
+		const d = diagnose(base);
+		const html = renderDiagnosisHtml(d, { brandName: "PandaSofa", generatedAt: "2026-08-28T12:00:00+08:00", runsTotal: 270 });
+		expect(html).toContain("<svg");
+		expect(html).toContain(`${d.grade} 级`);
+		expect((html.match(/class="act"/g) ?? []).length).toBe(d.actions.length);
+	});
+});

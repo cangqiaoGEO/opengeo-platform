@@ -7,7 +7,7 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { renderDiagnosisReport } from "../src/shared/diagnosis";
+import { renderDiagnosisHtml, renderDiagnosisReport } from "../src/shared/diagnosis";
 import { computeDiagnosis } from "../src/server/diagnosis-data";
 
 async function main() {
@@ -22,6 +22,10 @@ async function main() {
 	mkdirSync(dir, { recursive: true });
 	const file = join(dir, `${generatedAt.slice(0, 10)}.md`);
 	writeFileSync(file, md);
+	writeFileSync(
+		join(dir, `${generatedAt.slice(0, 10)}.html`),
+		renderDiagnosisHtml(diagnosis, { brandName: brand.name, generatedAt, runsTotal: input.runsTotal }),
+	);
 	console.log(`综合 ${diagnosis.composite} 分 · ${diagnosis.grade} 级 → ${file}`);
 
 	if (existsSync(join(bundleDir, ".git"))) {

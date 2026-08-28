@@ -50,25 +50,30 @@ const server = createServer(async (req, res) => {
 	const url = new URL(req.url, "http://x");
 	const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
 	try {
-		// —— 访客：提交自检 ——
+		// —— 访客：提交自检（运营方带 x-probe-key 直通：免限流，可 fresh 绕缓存）——
 		if (req.method === "POST" && url.pathname === "/api/probe") {
-			const { brand, category } = await readBody(req);
+			const { brand, category, fresh } = await readBody(req);
 			if (!brand?.trim() || !category?.trim()) return json(res, 400, { error: "缺少品牌或品类" });
 			if (brand.length > 60 || category.length > 60) return json(res, 400, { error: "长度超限" });
+			const operator = req.headers["x-probe-key"] === TOKEN;
 			const key = keyOf(brand, category);
 
 			// 24h 内同品牌+品类直接复用结果
-			const cached = db
-				.prepare("select id,status from probes where key=? and created_at>? order by created_at desc limit 1")
-				.get(key, Date.now() - CACHE_HOURS * 3600e3);
-			if (cached) return json(res, 200, { id: cached.id, reused: true });
+			if (!(operator && fresh)) {
+				const cached = db
+					.prepare("select id,status from probes where key=? and created_at>? order by created_at desc limit 1")
+					.get(key, Date.now() - CACHE_HOURS * 3600e3);
+				if (cached) return json(res, 200, { id: cached.id, reused: true });
+			}
 
-			const ipCount = db
-				.prepare("select count(*) n from probes where ip=? and created_at/86400000=?")
-				.get(ip, day()).n;
-			if (ipCount >= IP_DAILY) return json(res, 429, { error: "今日自检次数已用完，明天再来" });
-			const globalCount = db.prepare("select count(*) n from probes where created_at/86400000=?").get(day()).n;
-			if (globalCount >= GLOBAL_DAILY) return json(res, 429, { error: "今日全站测试额度已用完" });
+			if (!operator) {
+				const ipCount = db
+					.prepare("select count(*) n from probes where ip=? and created_at/86400000=?")
+					.get(ip, day()).n;
+				if (ipCount >= IP_DAILY) return json(res, 429, { error: "今日自检次数已用完，明天再来" });
+				const globalCount = db.prepare("select count(*) n from probes where created_at/86400000=?").get(day()).n;
+				if (globalCount >= GLOBAL_DAILY) return json(res, 429, { error: "今日全站测试额度已用完" });
+			}
 
 			const id = randomUUID();
 			db.prepare("insert into probes (id,brand,category,key,ip,created_at) values (?,?,?,?,?,?)").run(

@@ -178,3 +178,56 @@ export function renderDiagnosisReport(
 		"",
 	].join("\n");
 }
+
+/** Six-axis radar as inline SVG (hexagon grid, fixed label order). */
+function radarSvg(dims: Dimension[]): string {
+	const cx = 190;
+	const cy = 165;
+	const R = 110;
+	const angle = (i: number) => (Math.PI * 2 * i) / dims.length - Math.PI / 2;
+	const pt = (i: number, r: number) => `${(cx + r * Math.cos(angle(i))).toFixed(1)},${(cy + r * Math.sin(angle(i))).toFixed(1)}`;
+	const rings = [0.25, 0.5, 0.75, 1]
+		.map((f) => `<polygon points="${dims.map((_, i) => pt(i, R * f)).join(" ")}" fill="none" stroke="#d8d5cc" stroke-width="1"/>`)
+		.join("");
+	const spokes = dims.map((_, i) => `<line x1="${cx}" y1="${cy}" x2="${pt(i, R).split(",")[0]}" y2="${pt(i, R).split(",")[1]}" stroke="#d8d5cc" stroke-width="1"/>`).join("");
+	const shape = `<polygon points="${dims.map((d, i) => pt(i, (R * d.score) / 100)).join(" ")}" fill="rgba(44,74,110,.25)" stroke="#2c4a6e" stroke-width="2"/>`;
+	const labels = dims
+		.map((d, i) => {
+			const [x, y] = pt(i, R + 26).split(",").map(Number);
+			return `<text x="${x}" y="${y}" text-anchor="middle" font-size="12" fill="#565b64">${d.label} ${d.score.toFixed(0)}</text>`;
+		})
+		.join("");
+	return `<svg viewBox="0 0 380 330" width="100%" style="max-width:420px" xmlns="http://www.w3.org/2000/svg">${rings}${spokes}${shape}${labels}</svg>`;
+}
+
+/** Client-deliverable single-file HTML diagnosis (written next to the markdown report). */
+export function renderDiagnosisHtml(
+	d: Diagnosis,
+	opts: { brandName: string; generatedAt: string; runsTotal: number },
+): string {
+	const gradeColor: Record<string, string> = { A: "#0b8043", B: "#1a73e8", C: "#f9ab00", D: "#b3261e" };
+	const pColor: Record<string, string> = { P0: "#b3261e", P1: "#e8710a", P2: "#0b57d0" };
+	const esc = (x: string) => x.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+	return `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(opts.brandName)} 六维诊断</title>
+<style>body{font-family:-apple-system,"PingFang SC",sans-serif;background:#f7f6f2;color:#23262b;margin:0;line-height:1.7}
+.wrap{max-width:52rem;margin:0 auto;padding:2.5rem 1.2rem}.card{background:#fff;border:1px solid #e3e1da;border-radius:10px;padding:1.2rem 1.4rem;margin:1rem 0}
+h1{font-size:1.6rem}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid #eee}
+.badge{display:inline-block;color:#fff;border-radius:999px;padding:.3rem 1rem;font-weight:700}.svgwrap{display:flex;justify-content:center}
+.act{border-left:3px solid #ccc;padding:.5rem .9rem;margin:.5rem 0;background:#fff;border-radius:0 6px 6px 0;font-size:.9rem}
+.src{font-size:.75rem;color:#8a8f99}</style>
+<div class="wrap">
+<h1>${esc(opts.brandName)} · AI 可见度六维诊断</h1>
+<p class="src">生成于 ${opts.generatedAt.slice(0, 10)} · 数据基础 ${opts.runsTotal} 轮测评 · OpenGEO 指标宪章口径（实验性权重）</p>
+<div class="card" style="text-align:center"><span style="font-size:2.6rem;font-weight:700">${d.composite.toFixed(1)}</span>
+<span class="badge" style="background:${gradeColor[d.grade]}">${d.grade} 级</span>
+<div class="svgwrap">${radarSvg(d.dimensions)}</div></div>
+<div class="card"><table><tr><th>维度</th><th>权重</th><th>得分</th><th>口径</th><th>依据</th></tr>
+${d.dimensions.map((x) => `<tr><td>${x.label}</td><td>${x.weight}</td><td><b>${x.score.toFixed(0)}</b></td><td>${x.method === "measured" ? "实测" : "代理*"}</td><td class="src">${esc(x.evidence)}</td></tr>`).join("")}
+</table></div>
+<div class="card"><b>改进清单</b>
+${d.actions.map((a) => `<div class="act" style="border-color:${pColor[a.priority]}"><b style="color:${pColor[a.priority]}">${a.priority}</b> ${esc(a.text)}</div>`).join("")}
+</div>
+<p class="src">*代理口径为实验性近似（宪章要求标注）。判决为机器生成，人工不修改本文件。OpenGEO · github.com/cangqiaoGEO</p>
+</div></html>`;
+}

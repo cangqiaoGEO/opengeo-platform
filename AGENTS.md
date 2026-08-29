@@ -75,3 +75,7 @@ Do not routinely run formatting, linting, type checks, or tests after making cha
 - Add one only for **user-facing** changes (something an end user of the product would notice). Internal refactors, dependency bumps, and CI tweaks don't get one.
 - Keep it to one short, product-focused sentence; default to `patch`; scope it to the packages actually affected.
 - If a non-package directory (like `e2e/`) breaks Changesets tooling, fix the tooling configuration rather than inventing versions.
+
+## OpenGEO 研发流程（2026-08-29 起）
+
+按 [OpenGEO/docs/ai-native-sdlc.md](https://github.com/cangqiaoGEO/OpenGEO/blob/main/docs/ai-native-sdlc.md) 执行：任务先写 intent；指标口径与 IF 接口变更走 opengeo-spec RFC；stable 事实与口径变更是 L2（Owner 深审）；生产部署是 L3，放行人=统筹/维护者。双引擎归因（IF-D，RFC-0007）：以 content_ref 联表 matrix 发布记录与 GEO 观测。修 bug 先写会失败的测试，不改测试迁就实现（.claude/hooks 已设门禁）。

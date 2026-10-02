@@ -16,15 +16,15 @@
 		"@workspace/lib": "workspace:*",
 		"@workspace/whitelabel": "workspace:*",
 		"auth0": "^6.2.0",
-		"drizzle-orm": "^0.45.2",
+		"drizzle-orm": "^0.45.3",
 		"pg": "^8.23.0",
-		"pg-boss": "^12.27.0",
-		"posthog-node": "^5.49.1"
+		"pg-boss": "^12.35.0",
+		"posthog-node": "^5.54.1"
 	},
 	"devDependencies": {
-		"@types/node": "^26.2.0",
-		"@types/pg": "^8.21.0",
-		"tsx": "^4.23.12",
+		"@types/node": "^26.6.3",
+		"@types/pg": "^8.23.1",
+		"tsx": "^4.23.15",
 		"typescript": "^7.0.2"
 	}
 }
